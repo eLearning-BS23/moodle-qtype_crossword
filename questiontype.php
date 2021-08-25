@@ -48,6 +48,7 @@ class qtype_crossword extends question_type {
     }
 
     public function save_defaults_for_new_questions(stdClass $fromform): void {
+
         parent::save_defaults_for_new_questions($fromform);
         $this->set_default_value('shuffleanswers', $fromform->shuffleanswers);
     }
@@ -161,6 +162,8 @@ class qtype_crossword extends question_type {
     }
 
     public function get_possible_responses($questiondata) {
+        var_dump(3);
+        die();
         $subqs = array();
 
         $q = $this->make_question($questiondata);

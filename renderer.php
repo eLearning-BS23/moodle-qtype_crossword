@@ -36,32 +36,26 @@ class qtype_crossword_renderer extends qtype_with_combined_feedback_renderer
 
     public function formulation_and_controls(question_attempt $qa, question_display_options $options)
     {
+        global $PAGE;
         $question = $qa->get_question();
         $stemorder = $question->get_stem_order();
         $response = $qa->get_last_qt_data();
 
         $choices = $this->format_choices($question);
-
+        $arr = [];
+        foreach ($stemorder as $key => $stemid) {
+            $ques = strip_tags($this->format_stem_text($qa, $stemid));
+            $ans = trim($choices[$question->get_right_choice_for($stemid)]);
+            $filename = $qa->get_qt_field_name('sub' . $key);
+            array_push($arr, [$ans, $ques, $filename]);
+        };
         $result = '';
-
         $result .= '
                     <link rel="stylesheet" href="' . $CFG->dirroot . '/question/type/crossword/styles.css">
-                    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-                    <script src="' . $CFG->dirroot . '/question/type/crossword/script.js"></script>
                     ';
 
-        $result .= "  
-                <script type='text/javascript'>
-                    $(document).ready(function(event) {
-                        var puzzlewords = [
-                            ['niloy', 'Writ Niloy.'],
-                            ['Ecosystem', 'Any system where life can grow and thrive.'],
-                        ];
-                        crosswordPuzzle(puzzlewords);
-                    });
-                
-                </script>
-        ";
+        $PAGE->requires->js_call_amd('qtype_crossword/crossword', 'setup', array(json_encode($arr)));
+
 
         $result .= '<div id="root" class="root">
                     </div>
@@ -82,30 +76,13 @@ class qtype_crossword_renderer extends qtype_with_combined_feedback_renderer
                                     </center>
                                 </td>
                             </tr>
-
                         </table>
-
-                    </div>
-
-                    <div id="answer-form">
-
-                        <div class="short-margin">
-
-                            <p id="position-and-clue"></p>
-
-                            <p>Answer : <input id="solution-answer" type="text" size="40"></p>
-
-                            <p id="answer-results" class="hidden"></p>
-
-                            <p><input type="button" id="cancel-button" value="Cancel"> <input type="button" id="answer-button" value="Answer"> <input type="button" id="reveal-answer-button" value="Reveal Answer"></p>
-
-                        </div>
-
                     </div>
         ';
-//        $result .= html_writer::tag('div', $question->format_questiontext($qa),
-//                array('class' => 'qtext'));
 
+//        $result .= html_writer::tag('div', $question->format_questiontext($qa),
+//            array('class' => 'qtext'));
+//
 //        $result .= html_writer::start_tag('div', array('class' => 'ablock'));
 //        $result .= html_writer::start_tag('table', array('class' => 'answer'));
 //        $result .= html_writer::start_tag('tbody');
@@ -118,7 +95,7 @@ class qtype_crossword_renderer extends qtype_with_combined_feedback_renderer
 //            $fieldname = 'sub' . $key;
 //
 //            $result .= html_writer::tag('td', $this->format_stem_text($qa, $stemid),
-//                    array('class' => 'text'));
+//                array('class' => 'text'));
 //
 //            $classes = 'control';
 //            $feedbackimage = '';
@@ -137,12 +114,12 @@ class qtype_crossword_renderer extends qtype_with_combined_feedback_renderer
 //            }
 //
 //            $result .= html_writer::tag('td',
-//                    html_writer::label(get_string('answer', 'qtype_crossword', $i),
-//                            'menu' . $qa->get_qt_field_name('sub' . $key), false,
-//                            array('class' => 'accesshide')) .
-//                    html_writer::select($choices, $qa->get_qt_field_name('sub' . $key), $selected,
-//                            array('0' => 'choose'), array('disabled' => $options->readonly, 'class' => 'custom-select ml-1')) .
-//                    ' ' . $feedbackimage, array('class' => $classes));
+//                html_writer::label(get_string('answer', 'qtype_crossword', $i),
+//                    'menu' . $qa->get_qt_field_name('sub' . $key), false,
+//                    array('class' => 'accesshide')) .
+//                html_writer::select($choices, $qa->get_qt_field_name('sub' . $key), $selected,
+//                    array('0' => 'choose'), array('disabled' => $options->readonly, 'class' => 'custom-select ml-1')) .
+//                ' ' . $feedbackimage, array('class' => $classes));
 //
 //            $result .= html_writer::end_tag('tr');
 //            $parity = 1 - $parity;
@@ -155,10 +132,52 @@ class qtype_crossword_renderer extends qtype_with_combined_feedback_renderer
 //
 //        if ($qa->get_state() == question_state::$invalid) {
 //            $result .= html_writer::nonempty_tag('div',
-//                    $question->get_validation_error($response),
-//                    array('class' => 'validationerror'));
+//                $question->get_validation_error($response),
+//                array('class' => 'validationerror'));
 //        }
 
+
+        $result .= "
+        <script>
+	function onBlurFuntion(data,x,y,across){
+		
+		var answer = data.toLowerCase();
+
+		if (answer) {
+			var across = across;
+
+			var x = parseInt(x, 10);
+			var y = parseInt(y, 10);
+
+			if (across && across != 'false') {
+				for (var i = 0; i < answer.length; i++) {
+					var newheight = y + i;
+					var letterposition = 'letter-position-' + x + '-' + newheight;
+					$('#' + letterposition).text(answer[i]);
+				}
+			} else {
+				for (var i = 0; i < answer.length; i++) {
+					var newwidth = x + i;
+					var letterposition = 'letter-position-' + newwidth + '-' + y;
+					$('#' + letterposition).text(answer[i]);
+				}
+			}
+
+			// $('#' + word + '-listing').addClass('strikeout');
+			// $('#' + word + '-listing').attr('data-solved', true);
+
+			$('#answer-form').hide();
+		} else {
+			if (!$('#answer-results').is(':visible')) {
+				$('#answer-results').show();
+				$('#answer-results').html('Incorrect Answer, Please Try Again');
+			}
+		}
+
+		return false;
+	}
+</script>
+";
 
         return $result;
     }
