@@ -29,6 +29,6 @@ $plugin->component = 'qtype_crossword';
 
 $plugin->version = 2021081700;
 
-$plugin->requires = 2021051100;
+$plugin->requires = 2020110906;
 
 $plugin->maturity = MATURITY_STABLE;
