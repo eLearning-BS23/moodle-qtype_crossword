@@ -1,4 +1,4 @@
-@qtype @qtype_match
+@qtype @qtype_crossword
 Feature: Test duplicating a quiz containing a Matching question
   As a teacher
   In order re-use my courses containing Matching questions
@@ -13,12 +13,12 @@ Feature: Test duplicating a quiz containing a Matching question
       | Course       | C1        | Test questions |
     And the following "questions" exist:
       | questioncategory | qtype | name         | template |
-      | Test questions   | match | matching-001 | foursubq |
+      | Test questions   | crossword | crosswording-001 | foursubq |
     And the following "activities" exist:
       | activity   | name      | course | idnumber |
       | quiz       | Test quiz | C1     | quiz1    |
     And quiz "Test quiz" contains the following questions:
-      | matching-001 | 1 |
+      | crosswording-001 | 1 |
     And I log in as "admin"
     And I am on "Course 1" course homepage
 
@@ -29,9 +29,9 @@ Feature: Test duplicating a quiz containing a Matching question
     And I restore "test_backup.mbz" backup into a new course using this options:
       | Schema | Course name | Course 2 |
     And I navigate to "Question bank" in current page administration
-    And I choose "Edit question" action for "matching-001" in the question bank
-    Then the following fields match these values:
-      | Question name                      | matching-001          |
+    And I choose "Edit question" action for "crosswording-001" in the question bank
+    Then the following fields crossword these values:
+      | Question name                      | crosswording-001          |
       | Question text                      | Classify the animals. |
       | General feedback                   | General feedback.     |
       | Default mark                       | 1                     |

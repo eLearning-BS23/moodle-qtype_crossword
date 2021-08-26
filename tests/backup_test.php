@@ -15,12 +15,14 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Tests for the matching question type backup and restore logic.
+ * Tests for the crossword question type backup and restore logic.
  *
- * @package   qtype_match
- * @copyright 2020 The Open University
- * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later.
+ * @package    qtype_crossword
+ * @copyright  2021 Brain station 23 ltd.
+ * @author     Brain station 23 ltd.
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+
 
 defined('MOODLE_INTERNAL') || die();
 
@@ -31,14 +33,16 @@ require_once($CFG->dirroot . '/course/externallib.php');
 
 
 /**
- * Tests for the matching question type backup and restore logic.
+ * Tests for the crossword question type backup and restore logic.
  */
-class qtype_match_backup_testcase extends advanced_testcase {
+class qtype_crossword_backup_testcase extends advanced_testcase
+{
 
     /**
-     * Duplicate quiz with a matching question, and check it worked.
+     * Duplicate quiz with a crossword question, and check it worked.
      */
-    public function test_duplicate_match_question() {
+    public function test_duplicate_crossword_question()
+    {
         global $DB;
         $this->resetAfterTest();
         $this->setAdminUser();
@@ -52,11 +56,11 @@ class qtype_match_backup_testcase extends advanced_testcase {
         $quizcontext = context_module::instance($quiz->cmid);
 
         $cat = $questiongenerator->create_question_category(['contextid' => $quizcontext->id]);
-        $question = $questiongenerator->create_question('match', 'trickynums', ['category' => $cat->id]);
+        $question = $questiongenerator->create_question('crossword', 'trickynums', ['category' => $cat->id]);
 
         // Store some counts.
         $numquizzes = count(get_fast_modinfo($course)->instances['quiz']);
-        $nummatchquestions = $DB->count_records('question', ['qtype' => 'match']);
+        $numcrosswordquestions = $DB->count_records('question', ['qtype' => 'crossword']);
 
         // Duplicate the page.
         duplicate_module($course, get_fast_modinfo($course)->get_cm($quiz->cmid));
@@ -65,15 +69,15 @@ class qtype_match_backup_testcase extends advanced_testcase {
         $this->assertCount($numquizzes + 1, get_fast_modinfo($course)->instances['quiz']);
 
         // Verify the copied question.
-        $this->assertEquals($nummatchquestions + 1, $DB->count_records('question', ['qtype' => 'match']));
-        $newmatchid = $DB->get_field_sql("
+        $this->assertEquals($numcrosswordquestions + 1, $DB->count_records('question', ['qtype' => 'crossword']));
+        $newcrosswordid = $DB->get_field_sql("
                 SELECT MAX(id)
                   FROM {question}
                  WHERE qtype = ?
-                ", ['match']);
-        $matchdata = question_bank::load_question_data($newmatchid);
+                ", ['crossword']);
+        $crossworddata = question_bank::load_question_data($newcrosswordid);
 
-        $subquestions = array_values($matchdata->options->subquestions);
+        $subquestions = array_values($crossworddata->options->subquestions);
 
         $this->assertSame('System.out.println(0);', $subquestions[0]->questiontext);
         $this->assertSame('0', $subquestions[0]->answertext);

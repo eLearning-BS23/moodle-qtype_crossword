@@ -1,4 +1,4 @@
-@qtype @qtype_match
+@qtype @qtype_crossword
 Feature: Preview a Matching question
   As a teacher
   In order to check my Matching questions will work for students
@@ -19,18 +19,18 @@ Feature: Preview a Matching question
       | Course       | C1        | Test questions |
     And the following "questions" exist:
       | questioncategory | qtype | name         | template |
-      | Test questions   | match | matching-001 | foursubq |
+      | Test questions   | crossword | crosswording-001 | foursubq |
     Given I log in as "teacher1"
     And I am on "Course 1" course homepage
     And I navigate to "Question bank" in current page administration
 
   @javascript @_switch_window
   Scenario: Preview a Matching question and submit a correct response.
-    When I choose "Edit question" action for "matching-001" in the question bank
+    When I choose "Edit question" action for "crosswording-001" in the question bank
     And I set the following fields to these values:
       | Shuffle    | 0   |
     And I press "id_submitbutton"
-    When I choose "Preview" action for "matching-001" in the question bank
+    When I choose "Preview" action for "crosswording-001" in the question bank
     And I switch to "questionpreview" window
     And I set the field "How questions behave" to "Immediate feedback"
     And I press "Start again with these options"
@@ -44,11 +44,11 @@ Feature: Preview a Matching question
 
   @javascript @_switch_window
   Scenario: Preview a Matching question and submit a partially correct response.
-    When I choose "Edit question" action for "matching-001" in the question bank
+    When I choose "Edit question" action for "crosswording-001" in the question bank
     And I set the following fields to these values:
       | Shuffle    | 0   |
     And I press "id_submitbutton"
-    When I choose "Preview" action for "matching-001" in the question bank
+    When I choose "Preview" action for "crosswording-001" in the question bank
     And I switch to "questionpreview" window
     And I set the field "How questions behave" to "Immediate feedback"
     And I press "Start again with these options"
@@ -62,11 +62,11 @@ Feature: Preview a Matching question
 
   @javascript @_switch_window
   Scenario: Preview a Matching question and submit an incorrect response.
-    When I choose "Edit question" action for "matching-001" in the question bank
+    When I choose "Edit question" action for "crosswording-001" in the question bank
     And I set the following fields to these values:
       | Shuffle    | 0   |
     And I press "id_submitbutton"
-    When I choose "Preview" action for "matching-001" in the question bank
+    When I choose "Preview" action for "crosswording-001" in the question bank
     And I switch to "questionpreview" window
     And I set the field "How questions behave" to "Immediate feedback"
     And I press "Start again with these options"

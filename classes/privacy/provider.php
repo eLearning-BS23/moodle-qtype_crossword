@@ -18,7 +18,8 @@
  * Privacy Subsystem implementation for qtype_crossword.
  *
  * @package    qtype_crossword
- * @copyright  2018 Andrew Nicols <andrew@nicols.co.uk>
+ * @copyright  2021 Brain station 23 ltd.
+ * @author     Brain station 23 ltd.
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
@@ -33,23 +34,26 @@ defined('MOODLE_INTERNAL') || die();
 /**
  * Privacy Subsystem for qtype_crossword implementing user_preference_provider.
  *
- * @copyright  2018 Andrew Nicols <andrew@nicols.co.uk>
+ * @package    qtype_crossword
+ * @copyright  2021 Brain station 23 ltd.
+ * @author     Brain station 23 ltd.
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class provider implements
-        // This component has data.
-        // We need to return default options that have been set a user preferences.
-        \core_privacy\local\metadata\provider,
-        \core_privacy\local\request\user_preference_provider
+    // This component has data.
+    // We need to return default options that have been set a user preferences.
+    \core_privacy\local\metadata\provider,
+    \core_privacy\local\request\user_preference_provider
 {
 
     /**
      * Returns meta data about this system.
      *
-     * @param   collection     $collection The initialised collection to add items to.
+     * @param collection $collection The initialised collection to add items to.
      * @return  collection     A listing of user data stored through this system.
      */
-    public static function get_metadata(collection $collection) : collection {
+    public static function get_metadata(collection $collection): collection
+    {
         $collection->add_user_preference('qtype_crossword_defaultmark', 'privacy:preference:defaultmark');
         $collection->add_user_preference('qtype_crossword_penalty', 'privacy:preference:penalty');
         $collection->add_user_preference('qtype_crossword_shuffleanswers', 'privacy:preference:shuffleanswers');
@@ -61,7 +65,8 @@ class provider implements
      *
      * @param int $userid The userid of the user whose data is to be exported.
      */
-    public static function export_user_preferences(int $userid) {
+    public static function export_user_preferences(int $userid)
+    {
         $preference = get_user_preferences('qtype_crossword_defaultmark', null, $userid);
         if (null !== $preference) {
             $desc = get_string('privacy:preference:defaultmark', 'qtype_crossword');

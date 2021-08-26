@@ -1,4 +1,4 @@
-@qtype @qtype_match
+@qtype @qtype_crossword
 Feature: Test exporting Matching questions
   As a teacher
   In order to be able to reuse my Matching questions
@@ -19,7 +19,7 @@ Feature: Test exporting Matching questions
       | Course       | C1        | Test questions |
     And the following "questions" exist:
       | questioncategory | qtype  | name         | template |
-      | Test questions   | match  | matching-001 | foursubq |
+      | Test questions   | crossword  | crosswording-001 | foursubq |
     And I log in as "teacher1"
     And I am on "Course 1" course homepage
 

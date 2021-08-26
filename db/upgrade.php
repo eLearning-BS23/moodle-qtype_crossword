@@ -17,18 +17,20 @@
 /**
  * Matching question type upgrade code.
  *
- * @package   qtype_crossword
- * @copyright 1999 onwards Martin Dougiamas {@link http://moodle.com}
- * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package    qtype_crossword
+ * @copyright  2021 Brain station 23 ltd.
+ * @author     Brain station 23 ltd.
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 defined('MOODLE_INTERNAL') || die();
 
 /**
- * Upgrade code for the matching question type.
+ * Upgrade code for the crossword question type.
  * @param int $oldversion the version we are upgrading from.
  */
-function xmldb_qtype_crossword_upgrade($oldversion) {
+function xmldb_qtype_crossword_upgrade($oldversion)
+{
     global $CFG;
 
     // Automatically generated Moodle v3.6.0 release upgrade line.

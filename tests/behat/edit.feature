@@ -1,4 +1,4 @@
-@qtype @qtype_match
+@qtype @qtype_crossword
 Feature: Test editing a Matching question
   As a teacher
   In order to be able to update my Matching question
@@ -19,7 +19,7 @@ Feature: Test editing a Matching question
       | Course       | C1        | Test questions |
     And the following "questions" exist:
       | questioncategory | qtype | name                 | template |
-      | Test questions   | match | Matching for editing | foursubq |
+      | Test questions   | crossword | Matching for editing | foursubq |
     And I log in as "teacher1"
     And I am on "Course 1" course homepage
     And I navigate to "Question bank" in current page administration

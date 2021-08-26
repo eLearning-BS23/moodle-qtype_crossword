@@ -15,11 +15,11 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Serve question type files
+ * CROSSWORD plugin version specification.
  *
- * @since      Moodle 3.0
  * @package    qtype_crossword
- * @copyright  Dongsheng Cai <dongsheng@moodle.com>
+ * @copyright  2021 Brain station 23 ltd.
+ * @author     Brain station 23 ltd.
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 

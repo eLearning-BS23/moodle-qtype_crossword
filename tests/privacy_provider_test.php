@@ -15,41 +15,46 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Privacy provider tests.
+ * pivecy provider test
  *
- * @package    qtype_match
- * @copyright  2021 The Open university
+ * @package    qtype_crossword
+ * @copyright  2021 Brain station 23 ltd.
+ * @author     Brain station 23 ltd.
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 use core_privacy\local\metadata\collection;
 use \core_privacy\local\request\user_preference_provider;
-use qtype_match\privacy\provider;
+use qtype_crossword\privacy\provider;
 use core_privacy\local\request\writer;
 use core_privacy\local\request\transform;
 
 defined('MOODLE_INTERNAL') || die();
 
 global $CFG;
-require_once($CFG->dirroot . '/question/type/match/classes/privacy/provider.php');
+require_once($CFG->dirroot . '/question/type/crossword/classes/privacy/provider.php');
 
 /**
  * Privacy provider tests class.
  *
- * @package    qtype_match
- * @copyright  2021 The Open university
+ * @package    qtype_crossword
+ * @copyright  2021 Brain station 23 ltd.
+ * @author     Brain station 23 ltd.
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class qtype_match_privacy_provider_testcase extends \core_privacy\tests\provider_testcase {
+class qtype_crossword_privacy_provider_testcase extends \core_privacy\tests\provider_testcase
+{
     // Include the privacy helper which has assertions on it.
 
-    public function test_get_metadata() {
-        $collection = new \core_privacy\local\metadata\collection('qtype_match');
-        $actual = \qtype_match\privacy\provider::get_metadata($collection);
+    public function test_get_metadata()
+    {
+        $collection = new \core_privacy\local\metadata\collection('qtype_crossword');
+        $actual = \qtype_crossword\privacy\provider::get_metadata($collection);
         $this->assertEquals($collection, $actual);
     }
 
-    public function test_export_user_preferences_no_pref() {
+    public function test_export_user_preferences_no_pref()
+    {
         $this->resetAfterTest();
 
         $user = $this->getDataGenerator()->create_user();
@@ -61,25 +66,25 @@ class qtype_match_privacy_provider_testcase extends \core_privacy\tests\provider
     /**
      * Test the export_user_preferences given different inputs
      * @dataProvider user_preference_provider
-
      * @param string $name The name of the user preference to get/set
      * @param string $value The value stored in the database
      * @param string $expected The expected transformed value
      */
-    public function test_export_user_preferences($name, $value, $expected) {
+    public function test_export_user_preferences($name, $value, $expected)
+    {
         $this->resetAfterTest();
         $user = $this->getDataGenerator()->create_user();
-        set_user_preference("qtype_match_$name", $value, $user);
+        set_user_preference("qtype_crossword_$name", $value, $user);
         provider::export_user_preferences($user->id);
         $writer = writer::with_context(\context_system::instance());
         $this->assertTrue($writer->has_any_data());
-        $preferences = $writer->get_user_preferences('qtype_match');
+        $preferences = $writer->get_user_preferences('qtype_crossword');
         foreach ($preferences as $key => $pref) {
-            $preference = get_user_preferences("qtype_match_{$key}", null, $user->id);
+            $preference = get_user_preferences("qtype_crossword_{$key}", null, $user->id);
             if ($preference === null) {
                 continue;
             }
-            $desc = get_string("privacy:preference:{$key}", 'qtype_match');
+            $desc = get_string("privacy:preference:{$key}", 'qtype_crossword');
             $this->assertEquals($expected, $pref->value);
             $this->assertEquals($desc, $pref->description);
         }
@@ -90,12 +95,13 @@ class qtype_match_privacy_provider_testcase extends \core_privacy\tests\provider
      *
      * @return array Array of valid user preferences.
      */
-    public function user_preference_provider() {
+    public function user_preference_provider()
+    {
         return [
-                'default mark 1' => ['defaultmark', 1, 1],
-                'penalty 33.33333%' => ['penalty', 0.3333333, '33.33333%'],
-                'shuffle yes' => ['shuffleanswers', 1, 'Yes'],
-                'shuffle no' => ['shuffleanswers', 0, 'No']
+            'default mark 1' => ['defaultmark', 1, 1],
+            'penalty 33.33333%' => ['penalty', 0.3333333, '33.33333%'],
+            'shuffle yes' => ['shuffleanswers', 1, 'Yes'],
+            'shuffle no' => ['shuffleanswers', 0, 'No']
         ];
     }
 }

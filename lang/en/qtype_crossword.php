@@ -16,10 +16,12 @@
 
 /**
  * Strings for component 'qtype_match', language 'en', branch 'MOODLE_20_STABLE'
+
  *
- * @package   qtype_match
- * @copyright 1999 onwards Martin Dougiamas  {@link http://moodle.com}
- * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package    qtype_crossword
+ * @copyright  2021 Brain station 23 ltd.
+ * @author     Brain station 23 ltd.
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 $string['answer'] = 'Answer {$a}';
@@ -29,7 +31,7 @@ $string['correctansweris'] = 'The correct answer is: {$a}';
 $string['deletedchoice'] = '[Deleted choice]';
 $string['deletedsubquestion'] = 'This part of the question was deleted after the attempt was started.';
 $string['filloutthreeqsandtwoas'] = 'You must provide at least two questions and three answers. You can provide extra wrong answers by giving an answer with a blank question. Entries where both the question and the answer are blank will be ignored.';
-$string['nomatchinganswer'] = 'You must specify an answer matching the question \'{$a}\'.';
+$string['nomatchinganswer'] = 'You must specify an answer crossword the question \'{$a}\'.';
 $string['nomatchinganswerforq'] = 'You must specify an answer for this question.';
 $string['notenoughqsandas'] = 'You must supply at least {$a->q} questions and {$a->a} answers.';
 $string['notenoughquestions'] = 'You must supply at least {$a} question and answer pairs.';
@@ -37,8 +39,8 @@ $string['shuffle'] = 'Shuffle';
 $string['shuffle_help'] = 'If enabled, the order of the statements (answers) is randomly shuffled for each attempt, provided that "Shuffle within questions" in the activity settings is also enabled.';
 $string['pleaseananswerallparts'] = 'Please answer all parts of the question.';
 $string['pluginname'] = 'Crossword';
-$string['pluginname_help'] = 'Crossword questions require the respondent to correctly match a list of names or statements (questions) to another list of names or statements (answers).';
-$string['pluginname_link'] = 'question/type/match';
+$string['pluginname_help'] = 'Crossword questions require the respondent to correctly crossword a list of names or statements (questions) to another list of names or statements (answers).';
+$string['pluginname_link'] = 'question/type/crossword';
 $string['pluginnameadding'] = 'Adding a Crossword question';
 $string['pluginnameediting'] = 'Editing a Crossword question';
 $string['pluginnamesummary'] = 'The answer to each of a number of sub-question must be selected from a list of possibilities.';

@@ -15,10 +15,11 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Test helpers for the match question type.
+ * Test helpers for the crossword question type.
  *
- * @package    qtype_match
- * @copyright  2013 The Open University
+ * @package    qtype_crossword
+ * @copyright  2021 Brain station 23 ltd.
+ * @author     Brain station 23 ltd.
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
@@ -26,31 +27,36 @@
 defined('MOODLE_INTERNAL') || die();
 
 global $CFG;
-require_once($CFG->dirroot . '/question/type/match/question.php');
+require_once($CFG->dirroot . '/question/type/crossword/question.php');
 
 
 /**
- * Test helper class for the match question type.
+ * Test helper class for the crossword question type.
  *
- * @copyright  2013 The Open University
+ * @package    qtype_crossword
+ * @copyright  2021 Brain station 23 ltd.
+ * @author     Brain station 23 ltd.
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class qtype_match_test_helper extends question_test_helper {
-    public function get_test_questions() {
+class qtype_crossword_test_helper extends question_test_helper
+{
+    public function get_test_questions()
+    {
         return array('foursubq', 'trickynums');
     }
 
     /**
-     * Makes a match question about completing two blanks in some text.
+     * Makes a crossword question about completing two blanks in some text.
      * @return object the question definition data, as it might be returned from
      * get_question_options.
      */
-    public function get_match_question_data_foursubq() {
+    public function get_crossword_question_data_foursubq()
+    {
         global $USER;
         $q = new stdClass();
         test_question_maker::initialise_question_data($q);
         $q->name = 'Matching question';
-        $q->qtype = 'match';
+        $q->qtype = 'crossword';
         $q->parent = 0;
         $q->questiontext = 'Classify the animals.';
         $q->questiontextformat = FORMAT_HTML;
@@ -68,22 +74,22 @@ class qtype_match_test_helper extends question_test_helper {
         test_question_maker::set_standard_combined_feedback_fields($q->options);
 
         $q->options->subquestions = array(
-            14 => (object) array(
+            14 => (object)array(
                 'id' => 14,
                 'questiontext' => 'frog',
                 'questiontextformat' => FORMAT_HTML,
                 'answertext' => 'amphibian'),
-            15 => (object) array(
+            15 => (object)array(
                 'id' => 15,
                 'questiontext' => 'cat',
                 'questiontextformat' => FORMAT_HTML,
                 'answertext' => 'mammal'),
-            16 => (object) array(
+            16 => (object)array(
                 'id' => 16,
                 'questiontext' => 'newt',
                 'questiontextformat' => FORMAT_HTML,
                 'answertext' => 'amphibian'),
-            17 => (object) array(
+            17 => (object)array(
                 'id' => 17,
                 'questiontext' => '',
                 'questiontextformat' => FORMAT_HTML,
@@ -94,11 +100,12 @@ class qtype_match_test_helper extends question_test_helper {
     }
 
     /**
-     * Makes a match question about completing two blanks in some text.
+     * Makes a crossword question about completing two blanks in some text.
      * @return object the question definition data, as it might be returned from
      *      the question editing form.
      */
-    public function get_match_question_form_data_foursubq() {
+    public function get_crossword_question_form_data_foursubq()
+    {
         $q = new stdClass();
         $q->name = 'Matching question';
         $q->questiontext = array('text' => 'Classify the animals.', 'format' => FORMAT_HTML);
@@ -128,50 +135,52 @@ class qtype_match_test_helper extends question_test_helper {
     }
 
     /**
-     * Makes a matching question to classify 'Dog', 'Frog', 'Toad' and 'Cat' as
+     * Makes a crosswording question to classify 'Dog', 'Frog', 'Toad' and 'Cat' as
      * 'Mammal', 'Amphibian' or 'Insect'.
      * defaultmark 1. Stems are shuffled by default.
-     * @return qtype_match_question
+     * @return qtype_crossword_question
      */
-    public static function make_match_question_foursubq() {
-        question_bank::load_question_definition_classes('match');
-        $match = new qtype_match_question();
-        test_question_maker::initialise_a_question($match);
-        $match->name = 'Matching question';
-        $match->questiontext = 'Classify the animals.';
-        $match->generalfeedback = 'Frogs and toads are amphibians, the others are mammals.';
-        $match->qtype = question_bank::get_qtype('match');
+    public static function make_crossword_question_foursubq()
+    {
+        question_bank::load_question_definition_classes('crossword');
+        $crossword = new qtype_crossword_question();
+        test_question_maker::initialise_a_question($crossword);
+        $crossword->name = 'Matching question';
+        $crossword->questiontext = 'Classify the animals.';
+        $crossword->generalfeedback = 'Frogs and toads are amphibians, the others are mammals.';
+        $crossword->qtype = question_bank::get_qtype('crossword');
 
-        $match->shufflestems = 1;
+        $crossword->shufflestems = 1;
 
-        test_question_maker::set_standard_combined_feedback_fields($match);
+        test_question_maker::set_standard_combined_feedback_fields($crossword);
 
         // Using unset to get 1-based arrays.
-        $match->stems = array('', 'Dog', 'Frog', 'Toad', 'Cat');
-        $match->stemformat = array('', FORMAT_HTML, FORMAT_HTML, FORMAT_HTML, FORMAT_HTML);
-        $match->choices = array('', 'Mammal', 'Amphibian', 'Insect');
-        $match->right = array('', 1, 2, 2, 1);
-        unset($match->stems[0]);
-        unset($match->stemformat[0]);
-        unset($match->choices[0]);
-        unset($match->right[0]);
+        $crossword->stems = array('', 'Dog', 'Frog', 'Toad', 'Cat');
+        $crossword->stemformat = array('', FORMAT_HTML, FORMAT_HTML, FORMAT_HTML, FORMAT_HTML);
+        $crossword->choices = array('', 'Mammal', 'Amphibian', 'Insect');
+        $crossword->right = array('', 1, 2, 2, 1);
+        unset($crossword->stems[0]);
+        unset($crossword->stemformat[0]);
+        unset($crossword->choices[0]);
+        unset($crossword->right[0]);
 
-        return $match;
+        return $crossword;
     }
 
     /**
-     * Makes a matching question with choices including '0' and '0.0'.
+     * Makes a crosswording question with choices including '0' and '0.0'.
      *
      * @return object the question definition data, as it might be returned from
      * get_question_options.
      */
-    public function get_match_question_data_trickynums() {
+    public function get_crossword_question_data_trickynums()
+    {
         global $USER;
 
         $q = new stdClass();
         test_question_maker::initialise_question_data($q);
-        $q->name = 'Java matching';
-        $q->qtype = 'match';
+        $q->name = 'Java crosswording';
+        $q->qtype = 'crossword';
         $q->parent = 0;
         $q->questiontext = 'What is the output of each of these lines of code?';
         $q->questiontextformat = FORMAT_HTML;
@@ -189,34 +198,35 @@ class qtype_match_test_helper extends question_test_helper {
         test_question_maker::set_standard_combined_feedback_fields($q->options);
 
         $q->options->subquestions = array(
-                14 => (object) array(
-                        'id' => 14,
-                        'questiontext' => 'System.out.println(0);',
-                        'questiontextformat' => FORMAT_HTML,
-                        'answertext' => '0'),
-                15 => (object) array(
-                        'id' => 15,
-                        'questiontext' => 'System.out.println(0.0);',
-                        'questiontextformat' => FORMAT_HTML,
-                        'answertext' => '0.0'),
-                16 => (object) array(
-                        'id' => 16,
-                        'questiontext' => '',
-                        'questiontextformat' => FORMAT_HTML,
-                        'answertext' => 'NULL'),
+            14 => (object)array(
+                'id' => 14,
+                'questiontext' => 'System.out.println(0);',
+                'questiontextformat' => FORMAT_HTML,
+                'answertext' => '0'),
+            15 => (object)array(
+                'id' => 15,
+                'questiontext' => 'System.out.println(0.0);',
+                'questiontextformat' => FORMAT_HTML,
+                'answertext' => '0.0'),
+            16 => (object)array(
+                'id' => 16,
+                'questiontext' => '',
+                'questiontextformat' => FORMAT_HTML,
+                'answertext' => 'NULL'),
         );
 
         return $q;
     }
 
     /**
-     * Makes a match question about completing two blanks in some text.
+     * Makes a crossword question about completing two blanks in some text.
      * @return object the question definition data, as it might be returned from
      *      the question editing form.
      */
-    public function get_match_question_form_data_trickynums() {
+    public function get_crossword_question_form_data_trickynums()
+    {
         $q = new stdClass();
-        $q->name = 'Java matching';
+        $q->name = 'Java crosswording';
         $q->questiontext = ['text' => 'What is the output of each of these lines of code?', 'format' => FORMAT_HTML];
         $q->generalfeedback = ['text' => 'Java has some advantages over PHP I guess!', 'format' => FORMAT_HTML];
         $q->defaultmark = 1;
@@ -243,33 +253,34 @@ class qtype_match_test_helper extends question_test_helper {
     }
 
     /**
-     * Makes a matching question with choices including '0' and '0.0'.
+     * Makes a crosswording question with choices including '0' and '0.0'.
      *
-     * @return qtype_match_question
+     * @return qtype_crossword_question
      */
-    public static function make_match_question_trickynums() {
-        question_bank::load_question_definition_classes('match');
-        $match = new qtype_match_question();
-        test_question_maker::initialise_a_question($match);
-        $match->name = 'Java matching';
-        $match->questiontext = 'What is the output of each of these lines of code?';
-        $match->generalfeedback = 'Java has some advantages over PHP I guess!';
-        $match->qtype = question_bank::get_qtype('match');
+    public static function make_crossword_question_trickynums()
+    {
+        question_bank::load_question_definition_classes('crossword');
+        $crossword = new qtype_crossword_question();
+        test_question_maker::initialise_a_question($crossword);
+        $crossword->name = 'Java crosswording';
+        $crossword->questiontext = 'What is the output of each of these lines of code?';
+        $crossword->generalfeedback = 'Java has some advantages over PHP I guess!';
+        $crossword->qtype = question_bank::get_qtype('crossword');
 
-        $match->shufflestems = 1;
+        $crossword->shufflestems = 1;
 
-        test_question_maker::set_standard_combined_feedback_fields($match);
+        test_question_maker::set_standard_combined_feedback_fields($crossword);
 
         // Using unset to get 1-based arrays.
-        $match->stems = array('', 'System.out.println(0);', 'System.out.println(0.0);');
-        $match->stemformat = array('', FORMAT_HTML, FORMAT_HTML);
-        $match->choices = array('', '0', '0.0', 'NULL');
-        $match->right = array('', 1, 2);
-        unset($match->stems[0]);
-        unset($match->stemformat[0]);
-        unset($match->choices[0]);
-        unset($match->right[0]);
+        $crossword->stems = array('', 'System.out.println(0);', 'System.out.println(0.0);');
+        $crossword->stemformat = array('', FORMAT_HTML, FORMAT_HTML);
+        $crossword->choices = array('', '0', '0.0', 'NULL');
+        $crossword->right = array('', 1, 2);
+        unset($crossword->stems[0]);
+        unset($crossword->stemformat[0]);
+        unset($crossword->choices[0]);
+        unset($crossword->right[0]);
 
-        return $match;
+        return $crossword;
     }
 }

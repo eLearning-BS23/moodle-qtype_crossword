@@ -15,42 +15,52 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Unit tests for the matching question definition class.
+ * Unit tests for the crossword question definition class.
  *
- * @package   qtype_match
- * @copyright 2009 The Open University
- * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package    qtype_crossword
+ * @copyright  2021 Brain station 23 ltd.
+ * @author     Brain station 23 ltd.
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
-
-defined('MOODLE_INTERNAL') || die();
-
-global $CFG;
-require_once($CFG->dirroot . '/question/engine/tests/helpers.php');
-require_once($CFG->dirroot . '/question/type/match/questiontype.php');
-require_once($CFG->dirroot . '/question/type/edit_question_form.php');
-require_once($CFG->dirroot . '/question/type/match/edit_match_form.php');
-
 
 /**
- * Unit tests for the matching question definition class.
  *
- * @copyright 2009 The Open University
- * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ *
+ *
+ * defined('MOODLE_INTERNAL') || die();
+ *
+ * global $CFG;
+ * require_once($CFG->dirroot . '/question/engine/tests/helpers.php');
+ * require_once($CFG->dirroot . '/question/type/crossword/questiontype.php');
+ * require_once($CFG->dirroot . '/question/type/edit_question_form.php');
+ * require_once($CFG->dirroot . '/question/type/crossword/edit_crossword_form.php');
+ *
+ *
+ * /**
+ * Unit tests for the crossword question definition class.
+ *
+ * @package    qtype_crossword
+ * @copyright  2021 Brain station 23 ltd.
+ * @author     Brain station 23 ltd.
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class qtype_match_test extends advanced_testcase {
-    /** @var qtype_match instance of the question type class to test. */
+class qtype_crossword_test extends advanced_testcase
+{
+    /** @var qtype_crossword instance of the question type class to test. */
     protected $qtype;
 
-    protected function setUp(): void {
-        $this->qtype = new qtype_match();
+    protected function setUp(): void
+    {
+        $this->qtype = new qtype_crossword();
     }
 
-    protected function tearDown(): void {
+    protected function tearDown(): void
+    {
         $this->qtype = null;
     }
 
-    protected function get_test_question_data() {
+    protected function get_test_question_data()
+    {
         global $USER;
         $q = new stdClass();
         $q->id = 0;
@@ -79,22 +89,22 @@ class qtype_match_test extends advanced_testcase {
         test_question_maker::set_standard_combined_feedback_fields($q->options);
 
         $q->options->subquestions = array(
-            14 => (object) array(
+            14 => (object)array(
                 'id' => 14,
                 'questiontext' => 'frog',
                 'questiontextformat' => FORMAT_HTML,
                 'answertext' => 'amphibian'),
-            15 => (object) array(
+            15 => (object)array(
                 'id' => 15,
                 'questiontext' => 'cat',
                 'questiontextformat' => FORMAT_HTML,
                 'answertext' => 'mammal'),
-            16 => (object) array(
+            16 => (object)array(
                 'id' => 16,
                 'questiontext' => 'newt',
                 'questiontextformat' => FORMAT_HTML,
                 'answertext' => 'amphibian'),
-            17 => (object) array(
+            17 => (object)array(
                 'id' => 17,
                 'questiontext' => '',
                 'questiontextformat' => FORMAT_HTML,
@@ -104,55 +114,60 @@ class qtype_match_test extends advanced_testcase {
         return $q;
     }
 
-    public function test_name() {
-        $this->assertEquals($this->qtype->name(), 'match');
+    public function test_name()
+    {
+        $this->assertEquals($this->qtype->name(), 'crossword');
     }
 
-    public function test_can_analyse_responses() {
+    public function test_can_analyse_responses()
+    {
         $this->assertTrue($this->qtype->can_analyse_responses());
     }
 
-    public function test_make_question_instance() {
-        $questiondata = test_question_maker::get_question_data('match', 'trickynums');
+    public function test_make_question_instance()
+    {
+        $questiondata = test_question_maker::get_question_data('crossword', 'trickynums');
         $question = question_bank::make_question($questiondata);
         $this->assertEquals($questiondata->name, $question->name);
         $this->assertEquals($questiondata->questiontext, $question->questiontext);
         $this->assertEquals($questiondata->questiontextformat, $question->questiontextformat);
         $this->assertEquals($questiondata->generalfeedback, $question->generalfeedback);
         $this->assertEquals($questiondata->generalfeedbackformat, $question->generalfeedbackformat);
-        $this->assertInstanceOf('qtype_match', $question->qtype);
+        $this->assertInstanceOf('qtype_crossword', $question->qtype);
         $this->assertEquals($questiondata->options->shuffleanswers, $question->shufflestems);
 
         $this->assertEquals(
-                [14 => 'System.out.println(0);', 15 => 'System.out.println(0.0);'],
-                $question->stems);
+            [14 => 'System.out.println(0);', 15 => 'System.out.println(0.0);'],
+            $question->stems);
 
         $this->assertEquals([14 => '0', 15 => '0.0', 16 => 'NULL'], $question->choices);
 
         $this->assertEquals([14 => 14, 15 => 15], $question->right);
     }
 
-    public function test_get_random_guess_score() {
+    public function test_get_random_guess_score()
+    {
         $q = $this->get_test_question_data();
         $this->assertEqualsWithDelta(0.3333333, $this->qtype->get_random_guess_score($q), 0.0000001);
     }
 
-    public function test_get_possible_responses() {
+    public function test_get_possible_responses()
+    {
         $q = $this->get_test_question_data();
 
         $this->assertEquals(array(
             14 => array(
-                14 => new question_possible_response('frog: amphibian', 1/3),
+                14 => new question_possible_response('frog: amphibian', 1 / 3),
                 15 => new question_possible_response('frog: mammal', 0),
                 17 => new question_possible_response('frog: insect', 0),
                 null => question_possible_response::no_response()),
             15 => array(
                 14 => new question_possible_response('cat: amphibian', 0),
-                15 => new question_possible_response('cat: mammal', 1/3),
+                15 => new question_possible_response('cat: mammal', 1 / 3),
                 17 => new question_possible_response('cat: insect', 0),
                 null => question_possible_response::no_response()),
             16 => array(
-                14 => new question_possible_response('newt: amphibian', 1/3),
+                14 => new question_possible_response('newt: amphibian', 1 / 3),
                 15 => new question_possible_response('newt: mammal', 0),
                 17 => new question_possible_response('newt: insect', 0),
                 null => question_possible_response::no_response()),
@@ -160,21 +175,22 @@ class qtype_match_test extends advanced_testcase {
     }
 
 
-    public function test_question_saving_foursubq() {
+    public function test_question_saving_foursubq()
+    {
         $this->resetAfterTest(true);
         $this->setAdminUser();
 
-        $questiondata = test_question_maker::get_question_data('match');
-        $formdata = test_question_maker::get_question_form_data('match');
+        $questiondata = test_question_maker::get_question_data('crossword');
+        $formdata = test_question_maker::get_question_form_data('crossword');
 
         $generator = $this->getDataGenerator()->get_plugin_generator('core_question');
         $cat = $generator->create_question_category(array());
 
         $formdata->category = "{$cat->id},{$cat->contextid}";
 
-        qtype_match_edit_form::mock_submit((array)$formdata);
+        qtype_crossword_edit_form::mock_submit((array)$formdata);
 
-        $form = qtype_match_test_helper::get_question_editing_form($cat, $questiondata);
+        $form = qtype_crossword_test_helper::get_question_editing_form($cat, $questiondata);
         $this->assertTrue($form->is_validated());
 
         $fromform = $form->get_data();
