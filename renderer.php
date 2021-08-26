@@ -15,25 +15,32 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Matching question renderer class.
+ * CROSSWORD plugin version specification.
  *
- * @package   qtype_crossword
- * @copyright 2009 The Open University
- * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package    qtype_crossword
+ * @copyright  2021 Brain station 23 ltd.
+ * @author     Brain station 23 ltd.
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 
 defined('MOODLE_INTERNAL') || die();
 
 /**
- * Generates the output for matching questions.
- *
- * @copyright 2009 The Open University
- * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * Generates the output for crossword questions.
+ * @copyright  2021 Brain station 23 ltd.
+ * @author     Brain station 23 ltd.
  */
 class qtype_crossword_renderer extends qtype_with_combined_feedback_renderer
 {
 
+    /*
+     * Display question
+     *
+     * @param question_attempt $qa
+     * @param array $options
+     * @return html
+     */
     public function formulation_and_controls(question_attempt $qa, question_display_options $options)
     {
         global $PAGE;
@@ -67,12 +74,10 @@ class qtype_crossword_renderer extends qtype_with_combined_feedback_renderer
                             <tr>
                                 <td width="50%" id="left-list" valign="top" class="list-text">
                                     <center>
-                                    <h3>Across</h3>
                                     </center>
                                 </td>
                                 <td width="50%" id="right-list" valign="top" class="list-text">
                                     <center>
-                                    <h3>Down</h3>
                                     </center>
                                 </td>
                             </tr>
@@ -80,104 +85,121 @@ class qtype_crossword_renderer extends qtype_with_combined_feedback_renderer
                     </div>
         ';
 
-//        $result .= html_writer::tag('div', $question->format_questiontext($qa),
-//            array('class' => 'qtext'));
-//
-//        $result .= html_writer::start_tag('div', array('class' => 'ablock'));
-//        $result .= html_writer::start_tag('table', array('class' => 'answer'));
-//        $result .= html_writer::start_tag('tbody');
-//
-//        $parity = 0;
-//        $i = 1;
-//        foreach ($stemorder as $key => $stemid) {
-//
-//            $result .= html_writer::start_tag('tr', array('class' => 'r' . $parity));
-//            $fieldname = 'sub' . $key;
-//
-//            $result .= html_writer::tag('td', $this->format_stem_text($qa, $stemid),
-//                array('class' => 'text'));
-//
-//            $classes = 'control';
-//            $feedbackimage = '';
-//
-//            if (array_key_exists($fieldname, $response)) {
-//                $selected = $response[$fieldname];
-//            } else {
-//                $selected = 0;
-//            }
-//
-//            $fraction = (int) ($selected && $selected == $question->get_right_choice_for($stemid));
-//
-//            if ($options->correctness && $selected) {
-//                $classes .= ' ' . $this->feedback_class($fraction);
-//                $feedbackimage = $this->feedback_image($fraction);
-//            }
-//
-//            $result .= html_writer::tag('td',
-//                html_writer::label(get_string('answer', 'qtype_crossword', $i),
-//                    'menu' . $qa->get_qt_field_name('sub' . $key), false,
-//                    array('class' => 'accesshide')) .
-//                html_writer::select($choices, $qa->get_qt_field_name('sub' . $key), $selected,
-//                    array('0' => 'choose'), array('disabled' => $options->readonly, 'class' => 'custom-select ml-1')) .
-//                ' ' . $feedbackimage, array('class' => $classes));
-//
-//            $result .= html_writer::end_tag('tr');
-//            $parity = 1 - $parity;
-//            $i++;
-//        }
-//        $result .= html_writer::end_tag('tbody');
-//        $result .= html_writer::end_tag('table');
-//
-//        $result .= html_writer::end_tag('div'); // Closes <div class="ablock">.
-//
-//        if ($qa->get_state() == question_state::$invalid) {
-//            $result .= html_writer::nonempty_tag('div',
-//                $question->get_validation_error($response),
-//                array('class' => 'validationerror'));
-//        }
+        $result .= html_writer::tag('div', $question->format_questiontext($qa),
+            array('class' => 'qtext'));
+
+        $result .= html_writer::start_tag('div', array('class' => 'ablock'));
+        $result .= html_writer::start_tag('table', array('class' => 'answer'));
+        $result .= html_writer::start_tag('tbody');
+
+        $parity = 0;
+        $i = 1;
+        foreach ($stemorder as $key => $stemid) {
+
+            $result .= html_writer::start_tag('tr', array('class' => 'r' . $parity));
+            $fieldname = 'sub' . $key;
+
+            //render question
+            $result .= html_writer::tag('td', $this->format_stem_text($qa, $stemid),
+                array('class' => 'text'));
+
+            $classes = 'control';
+            $feedbackimage = '';
+
+            if (array_key_exists($fieldname, $response)) {
+                $value = '';
+                $selected = $response[$fieldname];
+                $value = strval($choices[$question->get_right_choice_for($stemid)]);
+
+                $PAGE->requires->js_call_amd('qtype_crossword/render', 'setup', array($qa->get_qt_field_name('sub' . $key), $value));
+
+
+            } else {
+                $selected = 0;
+            }
+
+            $fraction = (int)($selected && $selected == $question->get_right_choice_for($stemid));
+
+            if ($options->correctness && $selected) {
+                $classes .= ' ' . $this->feedback_class($fraction);
+                $feedbackimage = $this->feedback_image($fraction);
+            }
+
+            //render question options
+            $id = $qa->get_qt_field_name('sub' . $key) ?? '';
+            $result .= html_writer::tag('td',
+                html_writer::label(get_string('answer', 'qtype_crossword', $i),
+                    'menu' . $qa->get_qt_field_name('sub' . $key), false,
+                    array('class' => 'accesshide')) .
+                html_writer::select($choices, $qa->get_qt_field_name('sub' . $key), $selected,
+                    array('0' => 'choose'), array('disabled' => $options->readonly, 'class' => 'custom-select ml-1', 'onChange' => "getData(this,'$id')")) .
+                ' ' . $feedbackimage, array('class' => $classes));
+
+            $result .= html_writer::end_tag('tr');
+            $parity = 1 - $parity;
+            $i++;
+        }
+        $result .= html_writer::end_tag('tbody');
+        $result .= html_writer::end_tag('table');
+
+        $result .= html_writer::end_tag('div'); // Closes <div class="ablock">.
+
+        if ($qa->get_state() == question_state::$invalid) {
+            $result .= html_writer::nonempty_tag('div',
+                $question->get_validation_error($response),
+                array('class' => 'validationerror'));
+        }
 
 
         $result .= "
-        <script>
-	function onBlurFuntion(data,x,y,across){
-		
-		var answer = data.toLowerCase();
-
-		if (answer) {
-			var across = across;
-
-			var x = parseInt(x, 10);
-			var y = parseInt(y, 10);
-
-			if (across && across != 'false') {
-				for (var i = 0; i < answer.length; i++) {
-					var newheight = y + i;
-					var letterposition = 'letter-position-' + x + '-' + newheight;
-					$('#' + letterposition).text(answer[i]);
-				}
-			} else {
-				for (var i = 0; i < answer.length; i++) {
-					var newwidth = x + i;
-					var letterposition = 'letter-position-' + newwidth + '-' + y;
-					$('#' + letterposition).text(answer[i]);
-				}
-			}
-
-			// $('#' + word + '-listing').addClass('strikeout');
-			// $('#' + word + '-listing').attr('data-solved', true);
-
-			$('#answer-form').hide();
-		} else {
-			if (!$('#answer-results').is(':visible')) {
-				$('#answer-results').show();
-				$('#answer-results').html('Incorrect Answer, Please Try Again');
-			}
-		}
-
-		return false;
-	}
-</script>
-";
+            <script>
+                function getData(a,id){
+                    var value = a.options[a.selectedIndex].text;
+                    var across = document.getElementById(id).getAttribute('data-across');
+                    var x = document.getElementById(id).getAttribute('data-x');
+                    var y = document.getElementById(id).getAttribute('data-y');
+                   
+                    onBlurFuntion(value,x,y,across);
+                }
+                function onBlurFuntion(data,x,y,across){
+                    
+                    var answer = data.toLowerCase();
+            
+                    if (answer) {
+                        var across = across;
+            
+                        var x = parseInt(x, 10);
+                        var y = parseInt(y, 10);
+            
+                        if (across && across != 'false') {
+                            for (var i = 0; i < answer.length; i++) {
+                                var newheight = y + i;
+                                var letterposition = 'letter-position-' + x + '-' + newheight;
+                                $('#' + letterposition).text(answer[i]);
+                            }
+                        } else {
+                            for (var i = 0; i < answer.length; i++) {
+                                var newwidth = x + i;
+                                var letterposition = 'letter-position-' + newwidth + '-' + y;
+                                $('#' + letterposition).text(answer[i]);
+                            }
+                        }
+            
+                        // $('#' + word + '-listing').addClass('strikeout');
+                        // $('#' + word + '-listing').attr('data-solved', true);
+            
+                        $('#answer-form').hide();
+                    } else {
+                        if (!$('#answer-results').is(':visible')) {
+                            $('#answer-results').show();
+                            $('#answer-results').html('Incorrect Answer, Please Try Again');
+                        }
+                    }
+            
+                    return false;
+                }
+            </script>
+        ";
 
         return $result;
     }
@@ -188,7 +210,7 @@ class qtype_crossword_renderer extends qtype_with_combined_feedback_renderer
     }
 
     /**
-     * Format each question stem. Overwritten by randomsamatch renderer.
+     * Format each question stem. Overwritten by crossword renderer.
      *
      * @param question_attempt $qa
      * @param integer $stemid stem index
@@ -202,6 +224,12 @@ class qtype_crossword_renderer extends qtype_with_combined_feedback_renderer
             $qa, 'qtype_crossword', 'subquestion', $stemid);
     }
 
+    /*
+     * Answers option string format
+     *
+     * @param question_attempt $question
+     * @return string
+     */
     protected function format_choices($question)
     {
         $choices = array();
@@ -211,6 +239,12 @@ class qtype_crossword_renderer extends qtype_with_combined_feedback_renderer
         return $choices;
     }
 
+    /*
+     * render correct or wrong answer
+     *
+     * @param question_attempt $qa
+     * @return html
+     */
     public function correct_response(question_attempt $qa)
     {
         $question = $qa->get_question();

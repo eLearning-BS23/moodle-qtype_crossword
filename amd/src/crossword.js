@@ -95,9 +95,9 @@ define(['jquery'],
                     var graphs = buildCrosswordBlocks(crosswordblocks);
                     graphs = compactCrosswordBlockSources(graphs);
 
-                    if (areWeRandomizingPuzzlePieces()) {
-                        graphs = shuffle(graphs);
-                    }
+                    // if (areWeRandomizingPuzzlePieces()) {
+                    //     graphs = shuffle(graphs);
+                    // }
 
                     if (!graphs || !graphs.length) {
                         console.log("Developer Error : Your words could not be made into graphs.");
@@ -176,7 +176,7 @@ define(['jquery'],
                         }
 
                         return false;
-                    }
+                    };
 
                     /* closesolvefunction()
 
@@ -188,7 +188,7 @@ define(['jquery'],
                         $('#answer-results').hide();
                         $('#answer-form').hide();
                         return false;
-                    }
+                    };
 
                     /* answerfunction()
 
@@ -199,7 +199,6 @@ define(['jquery'],
                     // function onBlurFuntion(clue,x,y,accress){
                     // 	alert($(this).val());
                     // }
-
 
 
                     // ' + clue.replace(/"/g, '&quot;') + ',' + coordinates[0] + ',' + coordinates[1] + ',' + across + '
@@ -240,7 +239,7 @@ define(['jquery'],
                         }
 
                         return false;
-                    }
+                    };
 
                     /* revealanswerfunction()
 
@@ -273,7 +272,7 @@ define(['jquery'],
                         $('#' + word + '-listing').attr('data-solved', true);
 
                         $('#answer-form').hide();
-                    }
+                    };
 
                     $('.word-clue').click(solvefunction);
                     $('#cancel-button').click(closesolvefunction);
@@ -294,10 +293,10 @@ define(['jquery'],
                     var acrosslist = wordlists['across'];
                     var downlist = wordlists['down'];
 
-                    if (areWeRandomizingAcrossDownLists()) {
-                        acrosslist = shuffle(acrosslist);
-                        downlist = shuffle(downlist);
-                    }
+                    // if (areWeRandomizingAcrossDownLists()) {
+                    //     acrosslist = shuffle(acrosslist);
+                    //     downlist = shuffle(downlist);
+                    // }
 
                     var acrosslistordered = fillInCrossWordNumbers(acrosslist);
                     var downlistordered = fillInCrossWordNumbers(downlist, acrosslist, acrosslistordered);
@@ -328,20 +327,20 @@ define(['jquery'],
                         var clue = clues[word];
                         var fildname = fildnames[word];
 
-                        element += '<input type="text" name="' + fildname.replace(/"/g, '&quot;') + '" onblur="onBlurFuntion(this.value,' + coordinates[0] + ',' + coordinates[1] + ',' + across + ')"';
-                        element += 'data-word="' + word.replace(/"/g, '&quot;') + '" ';
-                        element += 'data-clue="' + clue.replace(/"/g, '&quot;') + '" ';
+                        element += '<input type="hidden" id="' + fildname.replace(/"/g, '&quot;') + '"  onblur="onBlurFuntion(this.value,' + coordinates[0] + ',' + coordinates[1] + ',' + across + ')"';
+                        // element += 'data-word="' + word.replace(/"/g, '&quot;') + '" ';
+                        // element += 'data-clue="' + clue.replace(/"/g, '&quot;') + '" ';
                         element += 'data-x="' + coordinates[0] + '" ';
                         element += 'data-y="' + coordinates[1] + '" ';
                         element += 'data-across="' + across + '" ';
                         element += '>';
-                        element += number + ' : ';
-                        element += '<span id="';
-                        element += word + '-listing';
-                        element += '" ';
-                        element += 'class="linkable">';
-                        element += clue;
-                        element += '</span>';
+                        // element += number + ' : ';
+                        // element += '<span id="';
+                        // element += word + '-listing';
+                        // element += '" ';
+                        // element += 'class="linkable">';
+                        // element += clue;
+                        // element += '</span>';
                         element += '</input>';
 
 
@@ -696,7 +695,7 @@ define(['jquery'],
                                 viewPuzzle(matrix);
 
                                 solutioncoordinates = [fullmatrix.length + 1, 0];
-                                matrix = compactCrosswordBlockSource({ 'matrix': matrix })['matrix'];
+                                matrix = compactCrosswordBlockSource({'matrix': matrix})['matrix'];
                                 fullmatrix.push('');
                                 fullmatrix = joinVerticalMatrices(fullmatrix, matrix);
 
@@ -711,7 +710,7 @@ define(['jquery'],
                             }
                         }
 
-                        fullmatrix = compactCrosswordBlockSource({ 'matrix': fullmatrix })['matrix'];
+                        fullmatrix = compactCrosswordBlockSource({'matrix': fullmatrix})['matrix'];
                     }
 
                     var fullgraph = {

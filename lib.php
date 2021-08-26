@@ -17,7 +17,7 @@
 /**
  * Serve question type files
  *
- * @since      Moodle 2.0
+ * @since      Moodle 3.0
  * @package    qtype_crossword
  * @copyright  Dongsheng Cai <dongsheng@moodle.com>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
@@ -29,8 +29,6 @@ defined('MOODLE_INTERNAL') || die();
 
 /**
  * Checks file access for matching questions.
- * @package  qtype_crossword
- * @category files
  * @param stdClass $course course object
  * @param stdClass $cm course module object
  * @param stdClass $context context object
@@ -39,8 +37,11 @@ defined('MOODLE_INTERNAL') || die();
  * @param bool $forcedownload whether or not force download
  * @param array $options additional options affecting the file serving
  * @return bool
+ * @package  qtype_crossword
+ * @category files
  */
-function qtype_crossword_pluginfile($course, $cm, $context, $filearea, $args, $forcedownload, array $options=array()) {
+function qtype_crossword_pluginfile($course, $cm, $context, $filearea, $args, $forcedownload, array $options = array())
+{
     global $DB, $CFG;
     require_once($CFG->libdir . '/questionlib.php');
     question_pluginfile($course, $context, 'qtype_crossword', $filearea, $args, $forcedownload, $options);

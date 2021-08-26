@@ -15,11 +15,12 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Defines the editing form for the match question type.
+ * CROSSWORD plugin version specification.
  *
- * @package   qtype_crossword
- * @copyright 2007 Jamie Pratt me@jamiep.org
- * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package    qtype_crossword
+ * @copyright  2021 Brain station 23 ltd.
+ * @author     Brain station 23 ltd.
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 
@@ -29,22 +30,25 @@ defined('MOODLE_INTERNAL') || die();
 /**
  * Match question type editing form definition.
  *
- * @copyright 2007 Jamie Pratt me@jamiep.org
- * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @copyright  2021 Brain station 23 ltd.
+ * @author     Brain station 23 ltd.
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class qtype_crossword_edit_form extends question_edit_form {
+class qtype_crossword_edit_form extends question_edit_form
+{
 
     protected function get_per_answer_fields($mform, $label, $gradeoptions,
-            &$repeatedoptions, &$answersoption) {
+                                             &$repeatedoptions, &$answersoption)
+    {
         $mform->addElement('static', 'answersinstruct',
-                get_string('availablechoices', 'qtype_crossword'),
-                get_string('filloutthreeqsandtwoas', 'qtype_crossword'));
+            get_string('availablechoices', 'qtype_crossword'),
+            get_string('filloutthreeqsandtwoas', 'qtype_crossword'));
 
         $repeated = array();
         $repeated[] = $mform->createElement('editor', 'subquestions',
-                $label, array('rows'=>3), $this->editoroptions);
+            $label, array('rows' => 3), $this->editoroptions);
         $repeated[] = $mform->createElement('text', 'subanswers',
-                get_string('answer', 'question'), array('size' => 50, 'maxlength' => 255));
+            get_string('answer', 'question'), array('size' => 50, 'maxlength' => 255));
         $repeatedoptions['subquestions']['type'] = PARAM_RAW;
         $repeatedoptions['subanswers']['type'] = PARAM_TEXT;
         $answersoption = 'subquestions';
@@ -56,9 +60,10 @@ class qtype_crossword_edit_form extends question_edit_form {
      *
      * @param object $mform the form being built.
      */
-    protected function definition_inner($mform) {
+    protected function definition_inner($mform)
+    {
         $mform->addElement('advcheckbox', 'shuffleanswers',
-                get_string('shuffle', 'qtype_crossword'), null, null, array(0, 1));
+            get_string('shuffle', 'qtype_crossword'), null, null, array(0, 1));
         $mform->addHelpButton('shuffleanswers', 'shuffle', 'qtype_crossword');
         $mform->setDefault('shuffleanswers', $this->get_default_value('shuffleanswers', 1));
 
@@ -71,11 +76,13 @@ class qtype_crossword_edit_form extends question_edit_form {
     /**
      * Language string to use for 'Add {no} more {whatever we call answers}'.
      */
-    protected function get_more_choices_string() {
+    protected function get_more_choices_string()
+    {
         return get_string('blanksforxmorequestions', 'qtype_crossword');
     }
 
-    protected function data_preprocessing($question) {
+    protected function data_preprocessing($question)
+    {
         $question = parent::data_preprocessing($question);
         $question = $this->data_preprocessing_combined_feedback($question, true);
         $question = $this->data_preprocessing_hints($question, true, true);
@@ -93,9 +100,9 @@ class qtype_crossword_edit_form extends question_edit_form {
             $draftid = file_get_submitted_draft_itemid('subquestions[' . $key . ']');
             $question->subquestions[$key] = array();
             $question->subquestions[$key]['text'] = file_prepare_draft_area($draftid,
-                    $this->context->id, 'qtype_crossword', 'subquestion',
-                    !empty($subquestion->id) ? (int) $subquestion->id : null,
-                    $this->fileoptions, $subquestion->questiontext);
+                $this->context->id, 'qtype_crossword', 'subquestion',
+                !empty($subquestion->id) ? (int)$subquestion->id : null,
+                $this->fileoptions, $subquestion->questiontext);
             $question->subquestions[$key]['format'] = $subquestion->questiontextformat;
             $question->subquestions[$key]['itemid'] = $draftid;
             $key++;
@@ -104,7 +111,8 @@ class qtype_crossword_edit_form extends question_edit_form {
         return $question;
     }
 
-    public function validation($data, $files) {
+    public function validation($data, $files)
+    {
         $errors = parent::validation($data, $files);
         $answers = $data['subanswers'];
         $questions = $data['subquestions'];
@@ -120,8 +128,8 @@ class qtype_crossword_edit_form extends question_edit_form {
                 $answercount++;
             }
             if ($trimmedquestion != '' && $trimmedanswer == '') {
-                $errors['subanswers['.$key.']'] =
-                        get_string('nomatchinganswerforq', 'qtype_crossword', $trimmedquestion);
+                $errors['subanswers[' . $key . ']'] =
+                    get_string('nomatchinganswerforq', 'qtype_crossword', $trimmedquestion);
             }
         }
         $numberqanda = new stdClass();
@@ -129,20 +137,21 @@ class qtype_crossword_edit_form extends question_edit_form {
         $numberqanda->a = 3;
         if ($questioncount < 1) {
             $errors['subquestions[0]'] =
-                    get_string('notenoughqsandas', 'qtype_crossword', $numberqanda);
+                get_string('notenoughqsandas', 'qtype_crossword', $numberqanda);
         }
         if ($questioncount < 2) {
             $errors['subquestions[1]'] =
-                    get_string('notenoughqsandas', 'qtype_crossword', $numberqanda);
+                get_string('notenoughqsandas', 'qtype_crossword', $numberqanda);
         }
         if ($answercount < 3) {
             $errors['subanswers[2]'] =
-                    get_string('notenoughqsandas', 'qtype_crossword', $numberqanda);
+                get_string('notenoughqsandas', 'qtype_crossword', $numberqanda);
         }
         return $errors;
     }
 
-    public function qtype() {
+    public function qtype()
+    {
         return 'crossword';
     }
 }

@@ -15,11 +15,12 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Question type class for the matching question type.
+ * CROSSWORD plugin question specification.
  *
- * @package   qtype_crossword
- * @copyright 1999 onwards Martin Dougiamas  {@link http://moodle.com}
- * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package    qtype_crossword
+ * @copyright  2021 Brain station 23 ltd.
+ * @author     Brain station 23 ltd.
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 
@@ -32,34 +33,39 @@ require_once($CFG->dirroot . '/question/engine/lib.php');
 /**
  * The matching question type class.
  *
- * @copyright 1999 onwards Martin Dougiamas  {@link http://moodle.com}
- * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package    qtype_crossword
+ * @copyright  2021 Brain station 23 ltd.
+ * @author     Brain station 23 ltd.
  */
-class qtype_crossword extends question_type {
+class qtype_crossword extends question_type
+{
 
-    public function get_question_options($question) {
+    public function get_question_options($question)
+    {
         global $DB;
         parent::get_question_options($question);
         $question->options = $DB->get_record('qtype_crossword_options',
-                array('questionid' => $question->id));
+            array('questionid' => $question->id));
         $question->options->subquestions = $DB->get_records('qtype_crossword_subquestions',
-                array('questionid' => $question->id), 'id ASC');
+            array('questionid' => $question->id), 'id ASC');
         return true;
     }
 
-    public function save_defaults_for_new_questions(stdClass $fromform): void {
+    public function save_defaults_for_new_questions(stdClass $fromform): void
+    {
 
         parent::save_defaults_for_new_questions($fromform);
         $this->set_default_value('shuffleanswers', $fromform->shuffleanswers);
     }
 
-    public function save_question_options($question) {
+    public function save_question_options($question)
+    {
         global $DB;
         $context = $question->context;
         $result = new stdClass();
 
         $oldsubquestions = $DB->get_records('qtype_crossword_subquestions',
-                array('questionid' => $question->id), 'id ASC');
+            array('questionid' => $question->id), 'id ASC');
 
         // Insert all the new question & answer pairs.
         foreach ($question->subquestions as $key => $questiontext) {
@@ -81,7 +87,7 @@ class qtype_crossword extends question_type {
             }
 
             $subquestion->questiontext = $this->import_or_save_files($questiontext,
-                    $context, 'qtype_crossword', 'subquestion', $subquestion->id);
+                $context, 'qtype_crossword', 'subquestion', $subquestion->id);
             $subquestion->questiontextformat = $questiontext['format'];
             $subquestion->answertext = trim($question->subanswers[$key]);
 
@@ -119,7 +125,8 @@ class qtype_crossword extends question_type {
         return true;
     }
 
-    protected function initialise_question_instance(question_definition $question, $questiondata) {
+    protected function initialise_question_instance(question_definition $question, $questiondata)
+    {
         parent::initialise_question_instance($question, $questiondata);
 
         $question->shufflestems = $questiondata->options->shuffleanswers;
@@ -144,11 +151,13 @@ class qtype_crossword extends question_type {
         }
     }
 
-    protected function make_hint($hint) {
+    protected function make_hint($hint)
+    {
         return question_hint_with_parts::load_from_record($hint);
     }
 
-    public function delete_question($questionid, $contextid) {
+    public function delete_question($questionid, $contextid)
+    {
         global $DB;
         $DB->delete_records('qtype_crossword_options', array('questionid' => $questionid));
         $DB->delete_records('qtype_crossword_subquestions', array('questionid' => $questionid));
@@ -156,12 +165,14 @@ class qtype_crossword extends question_type {
         parent::delete_question($questionid, $contextid);
     }
 
-    public function get_random_guess_score($questiondata) {
+    public function get_random_guess_score($questiondata)
+    {
         $q = $this->make_question($questiondata);
         return 1 / count($q->choices);
     }
 
-    public function get_possible_responses($questiondata) {
+    public function get_possible_responses($questiondata)
+    {
         var_dump(3);
         die();
         $subqs = array();
@@ -173,8 +184,8 @@ class qtype_crossword extends question_type {
             $responses = array();
             foreach ($q->choices as $choiceid => $choice) {
                 $responses[$choiceid] = new question_possible_response(
-                        $q->html_to_text($stem, $q->stemformat[$stemid]) . ': ' . $choice,
-                        ($choiceid == $q->right[$stemid]) / count($q->stems));
+                    $q->html_to_text($stem, $q->stemformat[$stemid]) . ': ' . $choice,
+                    ($choiceid == $q->right[$stemid]) / count($q->stems));
             }
             $responses[null] = question_possible_response::no_response();
 
@@ -184,31 +195,33 @@ class qtype_crossword extends question_type {
         return $subqs;
     }
 
-    public function move_files($questionid, $oldcontextid, $newcontextid) {
+    public function move_files($questionid, $oldcontextid, $newcontextid)
+    {
         global $DB;
         $fs = get_file_storage();
 
         parent::move_files($questionid, $oldcontextid, $newcontextid);
 
         $subquestionids = $DB->get_records_menu('qtype_crossword_subquestions',
-                array('questionid' => $questionid), 'id', 'id,1');
+            array('questionid' => $questionid), 'id', 'id,1');
         foreach ($subquestionids as $subquestionid => $notused) {
             $fs->move_area_files_to_new_context($oldcontextid,
-                    $newcontextid, 'qtype_crossword', 'subquestion', $subquestionid);
+                $newcontextid, 'qtype_crossword', 'subquestion', $subquestionid);
         }
 
         $this->move_files_in_combined_feedback($questionid, $oldcontextid, $newcontextid);
         $this->move_files_in_hints($questionid, $oldcontextid, $newcontextid);
     }
 
-    protected function delete_files($questionid, $contextid) {
+    protected function delete_files($questionid, $contextid)
+    {
         global $DB;
         $fs = get_file_storage();
 
         parent::delete_files($questionid, $contextid);
 
         $subquestionids = $DB->get_records_menu('qtype_crossword_subquestions',
-                array('questionid' => $questionid), 'id', 'id,1');
+            array('questionid' => $questionid), 'id', 'id,1');
         foreach ($subquestionids as $subquestionid => $notused) {
             $fs->delete_area_files($contextid, 'qtype_crossword', 'subquestion', $subquestionid);
         }
