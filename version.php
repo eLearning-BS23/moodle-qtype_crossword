@@ -15,7 +15,7 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-/**
+/*
  * crossword puzzle plugin version specification.
  *
  * @package    qtype_crossword
@@ -28,7 +28,7 @@ defined('MOODLE_INTERNAL') || die();
 
 $plugin->component = 'qtype_crossword';
 
-$plugin->version = 2021081700;
+$plugin->version = 2019111803;
 
 $plugin->requires = 2020110906;
 
