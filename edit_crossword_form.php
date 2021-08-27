@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -14,7 +15,7 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-/**
+/*
  * CROSSWORD plugin version specification.
  *
  * @package    qtype_crossword
@@ -23,9 +24,7 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-
 defined('MOODLE_INTERNAL') || die();
-
 
 /**
  * Match question type editing form definition.
@@ -36,7 +35,6 @@ defined('MOODLE_INTERNAL') || die();
  */
 class qtype_crossword_edit_form extends question_edit_form
 {
-
     protected function get_per_answer_fields($mform, $label, $gradeoptions,
                                              &$repeatedoptions, &$answersoption)
     {
@@ -44,28 +42,30 @@ class qtype_crossword_edit_form extends question_edit_form
             get_string('availablechoices', 'qtype_crossword'),
             get_string('filloutthreeqsandtwoas', 'qtype_crossword'));
 
-        $repeated = array();
+        $repeated = [];
         $repeated[] = $mform->createElement('editor', 'subquestions',
-            $label, array('rows' => 3), $this->editoroptions);
+            $label, ['rows' => 3], $this->editoroptions);
         $repeated[] = $mform->createElement('text', 'subanswers',
-            get_string('answer', 'question'), array('size' => 50, 'maxlength' => 255));
+            get_string('answer', 'question'), ['size' => 50, 'maxlength' => 255]);
         $repeatedoptions['subquestions']['type'] = PARAM_RAW;
         $repeatedoptions['subanswers']['type'] = PARAM_TEXT;
         $answersoption = 'subquestions';
+
         return $repeated;
     }
 
     /**
      * Add question-type specific form fields.
      *
-     * @param object $mform the form being built.
+     * @param object $mform the form being built
      */
     protected function definition_inner($mform)
     {
         $mform->addElement('advcheckbox', 'shuffleanswers',
-            get_string('shuffle', 'qtype_crossword'), null, null, array(0, 1));
+            get_string('shuffle', 'qtype_crossword'), null, null, [0, 1]);
         $mform->addHelpButton('shuffleanswers', 'shuffle', 'qtype_crossword');
-        $mform->setDefault('shuffleanswers', $this->get_default_value('shuffleanswers', 1));
+        // $mform->setDefault('shuffleanswers', $this->get_default_value('shuffleanswers', 1));
+        $mform->setDefault('shuffleanswers', 1);
 
         $this->add_per_answer_fields($mform, get_string('questionno', 'question', '{no}'), 0);
 
@@ -97,15 +97,15 @@ class qtype_crossword_edit_form extends question_edit_form
         foreach ($question->options->subquestions as $subquestion) {
             $question->subanswers[$key] = $subquestion->answertext;
 
-            $draftid = file_get_submitted_draft_itemid('subquestions[' . $key . ']');
-            $question->subquestions[$key] = array();
+            $draftid = file_get_submitted_draft_itemid('subquestions['.$key.']');
+            $question->subquestions[$key] = [];
             $question->subquestions[$key]['text'] = file_prepare_draft_area($draftid,
                 $this->context->id, 'qtype_crossword', 'subquestion',
-                !empty($subquestion->id) ? (int)$subquestion->id : null,
+                !empty($subquestion->id) ? (int) $subquestion->id : null,
                 $this->fileoptions, $subquestion->questiontext);
             $question->subquestions[$key]['format'] = $subquestion->questiontextformat;
             $question->subquestions[$key]['itemid'] = $draftid;
-            $key++;
+            ++$key;
         }
 
         return $question;
@@ -122,13 +122,13 @@ class qtype_crossword_edit_form extends question_edit_form
             $trimmedquestion = trim($question['text']);
             $trimmedanswer = trim($answers[$key]);
             if ($trimmedquestion != '') {
-                $questioncount++;
+                ++$questioncount;
             }
             if ($trimmedanswer != '' || $trimmedquestion != '') {
-                $answercount++;
+                ++$answercount;
             }
             if ($trimmedquestion != '' && $trimmedanswer == '') {
-                $errors['subanswers[' . $key . ']'] =
+                $errors['subanswers['.$key.']'] =
                     get_string('nomatchinganswerforq', 'qtype_crossword', $trimmedquestion);
             }
         }
@@ -147,6 +147,7 @@ class qtype_crossword_edit_form extends question_edit_form
             $errors['subanswers[2]'] =
                 get_string('notenoughqsandas', 'qtype_crossword', $numberqanda);
         }
+
         return $errors;
     }
 
