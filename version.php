@@ -28,8 +28,8 @@ defined('MOODLE_INTERNAL') || die();
 
 $plugin->component = 'qtype_crossword';
 
-$plugin->version = 2019111803;
+$plugin->version = 2021081700;
 
-$plugin->requires = 2020110906;
+$plugin->requires = 2019111803;
 
 $plugin->maturity = MATURITY_STABLE;
