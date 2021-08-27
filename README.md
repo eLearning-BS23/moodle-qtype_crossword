@@ -1,7 +1,5 @@
 # Moodle Crossword Question Type
-
-Moodle Crossword is a question type plugin teacher can create question and student can attempt that quiz.
-This plugin will help you to generate a crossword game.
+Moodle Crossword question type plugin will help teacher or course administrator to create crossword puzzle question for quizzes.
 
 <p align="center">
 <img src="https://i.imgur.com/S0pRiB6.png?1">
