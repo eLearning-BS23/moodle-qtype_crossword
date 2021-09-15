@@ -1,5 +1,4 @@
 <?php
-
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -29,21 +28,22 @@ defined('MOODLE_INTERNAL') || die();
 /**
  * Generates the output for crossword questions.
  *
- * @copyright  2021 Brain station 23 ltd.
+ * @copyright 2021 Brain Station 23 ltd.
  * @author     Brain station 23 ltd.
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class qtype_crossword_renderer extends qtype_with_combined_feedback_renderer
 {
-    /*
+    /**
      * Display question
      *
      * @param question_attempt $qa
-     * @param array $options
-     * @return html
+     * @param question_display_options $options
+     * @return string
+     * @throws coding_exception
      */
-    public function formulation_and_controls(question_attempt $qa, question_display_options $options)
-    {
-        global $PAGE,$CFG;
+    public function formulation_and_controls(question_attempt $qa, question_display_options $options) {
+        global $PAGE, $CFG;
         $question = $qa->get_question();
         $stemorder = $question->get_stem_order();
         $response = $qa->get_last_qt_data();
@@ -61,7 +61,7 @@ class qtype_crossword_renderer extends qtype_with_combined_feedback_renderer
                     <link rel="stylesheet" href="'.$CFG->dirroot.'/question/type/crossword/styles.css">
                     ';
 
-        $PAGE->requires->js_call_amd('qtype_crossword/crossword', 'setup', [json_encode($arr)]);
+        $this->page->requires->js_call_amd('qtype_crossword/crossword', 'setup', [json_encode($arr)]);
 
         $result .= '<div id="root" class="root">
                     </div>
@@ -96,8 +96,7 @@ class qtype_crossword_renderer extends qtype_with_combined_feedback_renderer
         foreach ($stemorder as $key => $stemid) {
             $result .= html_writer::start_tag('tr', ['class' => 'r'.$parity]);
             $fieldname = 'sub'.$key;
-
-            //render question
+            //render question.
             $result .= html_writer::tag('td', $this->format_stem_text($qa, $stemid),
                 ['class' => 'text']);
 
@@ -109,7 +108,7 @@ class qtype_crossword_renderer extends qtype_with_combined_feedback_renderer
                 $selected = $response[$fieldname];
                 $value = strval($choices[$question->get_right_choice_for($stemid)]);
 
-                $PAGE->requires->js_call_amd('qtype_crossword/render', 'setup', [$qa->get_qt_field_name('sub'.$key), $value]);
+                $this->page->requires->js_call_amd('qtype_crossword/render', 'setup', [$qa->get_qt_field_name('sub'.$key), $value]);
             } else {
                 $selected = 0;
             }
@@ -120,16 +119,24 @@ class qtype_crossword_renderer extends qtype_with_combined_feedback_renderer
                 $classes .= ' '.$this->feedback_class($fraction);
                 $feedbackimage = $this->feedback_image($fraction);
             }
-
-            //render question options
+            //render question options.
             $id = $qa->get_qt_field_name('sub'.$key) ?? '';
             $result .= html_writer::tag('td',
                 html_writer::label(get_string('answer', 'qtype_crossword', $i),
                     'menu'.$qa->get_qt_field_name('sub'.$key), false,
                     ['class' => 'accesshide']).
-                html_writer::select($choices, $qa->get_qt_field_name('sub'.$key), $selected,
-                    ['0' => 'choose'], ['disabled' => $options->readonly, 'class' => 'custom-select ml-1', 'onChange' => "getData(this,'$id')"]).
-                ' '.$feedbackimage, ['class' => $classes]);
+                html_writer::select(
+                    $choices, $qa->get_qt_field_name('sub'.$key),
+                    $selected,
+                    ['0' => 'choose'],
+                    [
+                        'disabled' => $options->readonly,
+                        'class' => 'custom-select ml-1',
+                        'onChange' => "getData(this,'$id')"
+                    ]
+                ).
+                ' '.$feedbackimage, ['class' => $classes]
+            );
 
             $result .= html_writer::end_tag('tr');
             $parity = 1 - $parity;
@@ -153,19 +160,14 @@ class qtype_crossword_renderer extends qtype_with_combined_feedback_renderer
                     var across = document.getElementById(id).getAttribute('data-across');
                     var x = document.getElementById(id).getAttribute('data-x');
                     var y = document.getElementById(id).getAttribute('data-y');
-                   
                     onBlurFuntion(value,x,y,across);
                 }
-                function onBlurFuntion(data,x,y,across){
-                    
+                function onBlurFuntion(data, x, y, across){
                     var answer = data.toLowerCase();
-            
                     if (answer) {
                         var across = across;
-            
                         var x = parseInt(x, 10);
                         var y = parseInt(y, 10);
-            
                         if (across && across != 'false') {
                             for (var i = 0; i < answer.length; i++) {
                                 var newheight = y + i;
@@ -179,10 +181,6 @@ class qtype_crossword_renderer extends qtype_with_combined_feedback_renderer
                                 $('#' + letterposition).text(answer[i]);
                             }
                         }
-            
-                        // $('#' + word + '-listing').addClass('strikeout');
-                        // $('#' + word + '-listing').attr('data-solved', true);
-            
                         $('#answer-form').hide();
                     } else {
                         if (!$('#answer-results').is(':visible')) {
@@ -190,7 +188,6 @@ class qtype_crossword_renderer extends qtype_with_combined_feedback_renderer
                             $('#answer-results').html('Incorrect Answer, Please Try Again');
                         }
                     }
-            
                     return false;
                 }
             </script>
@@ -199,8 +196,11 @@ class qtype_crossword_renderer extends qtype_with_combined_feedback_renderer
         return $result;
     }
 
-    public function specific_feedback(question_attempt $qa)
-    {
+    /**
+     * @param question_attempt $qa
+     * @return string
+     */
+    public function specific_feedback(question_attempt $qa) {
         return $this->combined_feedback($qa);
     }
 
@@ -212,8 +212,7 @@ class qtype_crossword_renderer extends qtype_with_combined_feedback_renderer
      *
      * @return string
      */
-    public function format_stem_text($qa, $stemid)
-    {
+    public function format_stem_text($qa, $stemid) {
         $question = $qa->get_question();
 
         return $question->format_text(
@@ -227,8 +226,7 @@ class qtype_crossword_renderer extends qtype_with_combined_feedback_renderer
      * @param question_attempt $question
      * @return string
      */
-    protected function format_choices($question)
-    {
+    protected function format_choices($question) {
         $choices = [];
         foreach ($question->get_choice_order() as $key => $choiceid) {
             $choices[$key] = format_string($question->choices[$choiceid]);
@@ -243,8 +241,7 @@ class qtype_crossword_renderer extends qtype_with_combined_feedback_renderer
      * @param question_attempt $qa
      * @return html
      */
-    public function correct_response(question_attempt $qa)
-    {
+    public function correct_response(question_attempt $qa) {
         $question = $qa->get_question();
         $stemorder = $question->get_stem_order();
 

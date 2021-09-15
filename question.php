@@ -26,6 +26,8 @@
 
 defined('MOODLE_INTERNAL') || die();
 
+global $CFG;
+
 require_once($CFG->dirroot . '/question/type/questionbase.php');
 
 /*
@@ -67,8 +69,12 @@ class qtype_crossword_question extends question_graded_automatically_with_countb
     protected $choiceorder;
 
 
-    public function start_attempt(question_attempt_step $step, $variant)
-    {
+    /**
+     * @param question_attempt_step $step
+     * @param $variant
+     * @throws coding_exception
+     */
+    public function start_attempt(question_attempt_step $step, $variant) {
 
         $this->stemorder = array_keys($this->stems);
         if ($this->shufflestems) {
@@ -82,8 +88,11 @@ class qtype_crossword_question extends question_graded_automatically_with_countb
         $this->set_choiceorder($choiceorder);
     }
 
-    public function apply_attempt_state(question_attempt_step $step)
-    {
+    /**
+     * @param question_attempt_step $step
+     * @throws coding_exception
+     */
+    public function apply_attempt_state(question_attempt_step $step) {
 
         $this->stemorder = explode(',', $step->get_qt_var('_stemorder'));
         $this->set_choiceorder(explode(',', $step->get_qt_var('_choiceorder')));
@@ -109,20 +118,22 @@ class qtype_crossword_question extends question_graded_automatically_with_countb
     }
 
     /**
-     * Helper method used by both {@link start_attempt()} and
-     * {@link apply_attempt_state()}.
+     * Helper method used by both.
      * @param array $choiceorder the choices, in order.
      */
-    protected function set_choiceorder($choiceorder)
-    {
+    protected function set_choiceorder($choiceorder) {
         $this->choiceorder = array();
         foreach ($choiceorder as $key => $choiceid) {
             $this->choiceorder[$key + 1] = $choiceid;
         }
     }
 
-    public function get_question_summary()
-    {
+    /**
+     * get_question_summary
+     *
+     * @return string
+     */
+    public function get_question_summary() {
 
         $question = $this->html_to_text($this->questiontext, $this->questiontextformat);
         $stems = array();
@@ -137,8 +148,12 @@ class qtype_crossword_question extends question_graded_automatically_with_countb
             implode('; ', $choices) . '}';
     }
 
-    public function summarise_response(array $response)
-    {
+    /**
+     * summarise_response
+     * @param array $response
+     * @return string|null
+     */
+    public function summarise_response(array $response) {
         $matches = array();
 
         foreach ($this->stemorder as $key => $stemid) {
@@ -154,8 +169,12 @@ class qtype_crossword_question extends question_graded_automatically_with_countb
         return implode('; ', $matches);
     }
 
-    public function classify_response(array $response)
-    {
+    /**
+     * @param array $response
+     * @return array
+     * @throws coding_exception
+     */
+    public function classify_response(array $response) {
 
         $selectedchoicekeys = array();
         foreach ($this->stemorder as $key => $stemid) {
@@ -169,7 +188,7 @@ class qtype_crossword_question extends question_graded_automatically_with_countb
         $parts = array();
         foreach ($this->stems as $stemid => $stem) {
             if ($this->right[$stemid] == 0 || !isset($selectedchoicekeys[$stemid])) {
-                // Choice for a deleted subquestion, ignore. (See apply_attempt_state.)
+                // Choice for a deleted subquestion, ignore. (See apply_attempt_state.);
                 continue;
             }
             $selectedchoicekey = $selectedchoicekeys[$stemid];
@@ -179,7 +198,7 @@ class qtype_crossword_question extends question_graded_automatically_with_countb
             }
             $choice = $this->choices[$selectedchoicekey];
             if ($choice == get_string('deletedchoice', 'qtype_crossword')) {
-                // Deleted choice, ignore. (See apply_attempt_state.)
+                // Deleted choice, ignore. (See apply_attempt_state.);
                 continue;
             }
             $parts[$stemid] = new question_classified_response(
@@ -189,8 +208,11 @@ class qtype_crossword_question extends question_graded_automatically_with_countb
         return $parts;
     }
 
-    public function clear_wrong_from_response(array $response)
-    {
+    /**
+     * @param array $response
+     * @return array
+     */
+    public function clear_wrong_from_response(array $response) {
         foreach ($this->stemorder as $key => $stemid) {
             if (!array_key_exists($this->field($key), $response) ||
                 $response[$this->field($key)] != $this->get_right_choice_for($stemid)) {
@@ -200,8 +222,11 @@ class qtype_crossword_question extends question_graded_automatically_with_countb
         return $response;
     }
 
-    public function get_num_parts_right(array $response)
-    {
+    /**
+     * @param array $response
+     * @return array
+     */
+    public function get_num_parts_right(array $response) {
         $numright = 0;
         foreach ($this->stemorder as $key => $stemid) {
             $fieldname = $this->field($key);
@@ -221,13 +246,14 @@ class qtype_crossword_question extends question_graded_automatically_with_countb
      * @param int $key stem number
      * @return string the question-type variable name.
      */
-    protected function field($key)
-    {
+    protected function field($key) {
         return 'sub' . $key;
     }
 
-    public function get_expected_data()
-    {
+    /**
+     * @return array
+     */
+    public function get_expected_data() {
         $vars = array();
         foreach ($this->stemorder as $key => $notused) {
             $vars[$this->field($key)] = PARAM_INT;
@@ -235,8 +261,10 @@ class qtype_crossword_question extends question_graded_automatically_with_countb
         return $vars;
     }
 
-    public function get_correct_response()
-    {
+    /**
+     * @return array
+     */
+    public function get_correct_response() {
         $response = array();
         foreach ($this->stemorder as $key => $stemid) {
             $response[$this->field($key)] = $this->get_right_choice_for($stemid);
@@ -244,8 +272,12 @@ class qtype_crossword_question extends question_graded_automatically_with_countb
         return $response;
     }
 
-    public function prepare_simulated_post_data($simulatedresponse)
-    {
+    /**
+     * @param array $simulatedresponse
+     * @return array
+     * @throws coding_exception
+     */
+    public function prepare_simulated_post_data($simulatedresponse) {
         $postdata = array();
         $stemtostemids = array_flip(clean_param_array($this->stems, PARAM_NOTAGS));
         $choicetochoiceno = array_flip($this->choices);
@@ -266,8 +298,12 @@ class qtype_crossword_question extends question_graded_automatically_with_countb
         return $postdata;
     }
 
-    public function get_student_response_values_for_simulation($postdata)
-    {
+    /**
+     * @param string[] $postdata
+     * @return array
+     * @throws coding_exception
+     */
+    public function get_student_response_values_for_simulation($postdata) {
         $simulatedresponse = array();
         foreach ($this->stemorder as $shuffledstemno => $stemid) {
             if (!empty($postdata[$this->field($shuffledstemno)])) {
@@ -282,8 +318,11 @@ class qtype_crossword_question extends question_graded_automatically_with_countb
         return $simulatedresponse;
     }
 
-    public function get_right_choice_for($stemid)
-    {
+    /**
+     * @param $stemid
+     * @return int|string|void
+     */
+    public function get_right_choice_for($stemid) {
         foreach ($this->choiceorder as $choicekey => $choiceid) {
             if ($this->right[$stemid] == $choiceid) {
                 return $choicekey;
@@ -291,8 +330,11 @@ class qtype_crossword_question extends question_graded_automatically_with_countb
         }
     }
 
-    public function is_complete_response(array $response)
-    {
+    /**
+     * @param array $response
+     * @return bool
+     */
+    public function is_complete_response(array $response) {
         $complete = true;
         foreach ($this->stemorder as $key => $stemid) {
             $complete = $complete && !empty($response[$this->field($key)]);
@@ -300,8 +342,11 @@ class qtype_crossword_question extends question_graded_automatically_with_countb
         return $complete;
     }
 
-    public function is_gradable_response(array $response)
-    {
+    /**
+     * @param array $response
+     * @return bool
+     */
+    public function is_gradable_response(array $response) {
         foreach ($this->stemorder as $key => $stemid) {
             if (!empty($response[$this->field($key)])) {
                 return true;
@@ -310,16 +355,24 @@ class qtype_crossword_question extends question_graded_automatically_with_countb
         return false;
     }
 
-    public function get_validation_error(array $response)
-    {
+    /**
+     * @param array $response
+     * @return lang_string|string
+     * @throws coding_exception
+     */
+    public function get_validation_error(array $response) {
         if ($this->is_complete_response($response)) {
             return '';
         }
         return get_string('pleaseananswerallparts', 'qtype_crossword');
     }
 
-    public function is_same_response(array $prevresponse, array $newresponse)
-    {
+    /**
+     * @param array $prevresponse
+     * @param array $newresponse
+     * @return bool
+     */
+    public function is_same_response(array $prevresponse, array $newresponse) {
         foreach ($this->stemorder as $key => $notused) {
             $fieldname = $this->field($key);
             if (!question_utils::arrays_same_at_key_integer(
@@ -330,15 +383,22 @@ class qtype_crossword_question extends question_graded_automatically_with_countb
         return true;
     }
 
-    public function grade_response(array $response)
-    {
+    /**
+     * @param array $response
+     * @return array
+     */
+    public function grade_response(array $response) {
         list($right, $total) = $this->get_num_parts_right($response);
         $fraction = $right / $total;
         return array($fraction, question_state::graded_state_for_fraction($fraction));
     }
 
-    public function compute_final_grade($responses, $totaltries)
-    {
+    /**
+     * @param array $responses
+     * @param int $totaltries
+     * @return float|int
+     */
+    public function compute_final_grade($responses, $totaltries) {
         $totalstemscore = 0;
         foreach ($this->stemorder as $key => $stemid) {
             $fieldname = $this->field($key);
@@ -363,18 +423,30 @@ class qtype_crossword_question extends question_graded_automatically_with_countb
         return $totalstemscore / count($this->stemorder);
     }
 
-    public function get_stem_order()
-    {
+    /**
+     * @return array
+     */
+    public function get_stem_order() {
         return $this->stemorder;
     }
 
-    public function get_choice_order()
-    {
+    /**
+     * @return array
+     */
+    public function get_choice_order() {
         return $this->choiceorder;
     }
 
-    public function check_file_access($qa, $options, $component, $filearea, $args, $forcedownload)
-    {
+    /**
+     * @param question_attempt $qa
+     * @param question_display_options $options
+     * @param string $component
+     * @param string $filearea
+     * @param array $args
+     * @param bool $forcedownload
+     * @return bool
+     */
+    public function check_file_access($qa, $options, $component, $filearea, $args, $forcedownload) {
         if ($component == 'qtype_crossword' && $filearea == 'subquestion') {
             $subqid = reset($args); // Itemid is sub question id.
             return array_key_exists($subqid, $this->stems);
@@ -400,8 +472,7 @@ class qtype_crossword_question extends question_graded_automatically_with_countb
      * should be visible.
      * @return mixed structure representing the question settings. In web services, this will be JSON-encoded.
      */
-    public function get_question_definition_for_external_rendering(question_attempt $qa, question_display_options $options)
-    {
+    public function get_question_definition_for_external_rendering(question_attempt $qa, question_display_options $options) {
         // This is a partial implementation, returning only the most relevant question settings for now,
         // ideally, we should return as much as settings as possible (depending on the state and display options).
 

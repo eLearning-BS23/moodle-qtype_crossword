@@ -45,8 +45,7 @@ class qtype_crossword_qe2_attempt_updater extends question_qtype_attempt_updater
     protected $choiceorder;
     protected $flippedchoiceorder;
 
-    public function question_summary()
-    {
+    public function question_summary() {
         $this->stems = array();
         $this->choices = array();
         $this->right = array();
@@ -69,8 +68,7 @@ class qtype_crossword_qe2_attempt_updater extends question_qtype_attempt_updater
             implode('; ', $this->stems) . '} -> {' . implode('; ', $this->choices) . '}';
     }
 
-    public function right_answer()
-    {
+    public function right_answer() {
         $answer = array();
         foreach ($this->stems as $key => $stem) {
             $answer[$stem] = $this->choices[$this->right[$key]];
@@ -78,8 +76,7 @@ class qtype_crossword_qe2_attempt_updater extends question_qtype_attempt_updater
         return $this->make_summary($answer);
     }
 
-    protected function explode_answer($answer)
-    {
+    protected function explode_answer($answer) {
         if (!$answer) {
             return array();
         }
@@ -92,8 +89,7 @@ class qtype_crossword_qe2_attempt_updater extends question_qtype_attempt_updater
         return $selections;
     }
 
-    protected function make_summary($pairs)
-    {
+    protected function make_summary($pairs) {
         $bits = array();
         foreach ($pairs as $stem => $answer) {
             $bits[] = $stem . ' -> ' . $answer;
@@ -101,8 +97,7 @@ class qtype_crossword_qe2_attempt_updater extends question_qtype_attempt_updater
         return implode('; ', $bits);
     }
 
-    protected function lookup_choice($choice)
-    {
+    protected function lookup_choice($choice) {
         foreach ($this->question->options->subquestions as $matchsub) {
             if ($matchsub->id == $choice) {
                 if (array_key_exists($matchsub->id, $this->choices)) {
@@ -115,8 +110,7 @@ class qtype_crossword_qe2_attempt_updater extends question_qtype_attempt_updater
         return null;
     }
 
-    public function response_summary($state)
-    {
+    public function response_summary($state) {
         $choices = $this->explode_answer($state->answer);
         if (empty($choices)) {
             return null;
@@ -144,8 +138,7 @@ class qtype_crossword_qe2_attempt_updater extends question_qtype_attempt_updater
         }
     }
 
-    public function was_answered($state)
-    {
+    public function was_answered($state) {
         $choices = $this->explode_answer($state->answer);
         foreach ($choices as $choice) {
             if ($choice) {
@@ -155,8 +148,7 @@ class qtype_crossword_qe2_attempt_updater extends question_qtype_attempt_updater
         return false;
     }
 
-    public function set_first_step_data_elements($state, &$data)
-    {
+    public function set_first_step_data_elements($state, &$data) {
         $choices = $this->explode_answer($state->answer);
         foreach ($choices as $key => $notused) {
             if (array_key_exists($key, $this->stems)) {
@@ -173,16 +165,14 @@ class qtype_crossword_qe2_attempt_updater extends question_qtype_attempt_updater
         $data['_choiceorder'] = implode(',', $this->choiceorder);
     }
 
-    public function supply_missing_first_step_data(&$data)
-    {
+    public function supply_missing_first_step_data(&$data) {
         throw new coding_exception('qtype_crossword_updater::supply_missing_first_step_data ' .
             'not tested');
         $data['_stemorder'] = array_keys($this->stems);
         $data['_choiceorder'] = shuffle(array_keys($this->choices));
     }
 
-    public function set_data_elements_for_step($state, &$data)
-    {
+    public function set_data_elements_for_step($state, &$data) {
         $choices = $this->explode_answer($state->answer);
 
         foreach ($this->stemorder as $i => $key) {

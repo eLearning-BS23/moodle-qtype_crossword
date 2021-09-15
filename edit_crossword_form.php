@@ -1,5 +1,4 @@
 <?php
-
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -35,9 +34,17 @@ defined('MOODLE_INTERNAL') || die();
  */
 class qtype_crossword_edit_form extends question_edit_form
 {
+    /**
+     * @param object $mform
+     * @param the $label
+     * @param the $gradeoptions
+     * @param reference $repeatedoptions
+     * @param reference $answersoption
+     * @return array
+     * @throws coding_exception
+     */
     protected function get_per_answer_fields($mform, $label, $gradeoptions,
-                                             &$repeatedoptions, &$answersoption)
-    {
+                                             &$repeatedoptions, &$answersoption) {
         $mform->addElement('static', 'answersinstruct',
             get_string('availablechoices', 'qtype_crossword'),
             get_string('filloutthreeqsandtwoas', 'qtype_crossword'));
@@ -59,12 +66,11 @@ class qtype_crossword_edit_form extends question_edit_form
      *
      * @param object $mform the form being built
      */
-    protected function definition_inner($mform)
-    {
+    protected function definition_inner($mform) {
         $mform->addElement('advcheckbox', 'shuffleanswers',
             get_string('shuffle', 'qtype_crossword'), null, null, [0, 1]);
         $mform->addHelpButton('shuffleanswers', 'shuffle', 'qtype_crossword');
-        // $mform->setDefault('shuffleanswers', $this->get_default_value('shuffleanswers', 1));
+
         $mform->setDefault('shuffleanswers', 1);
 
         $this->add_per_answer_fields($mform, get_string('questionno', 'question', '{no}'), 0);
@@ -76,13 +82,15 @@ class qtype_crossword_edit_form extends question_edit_form
     /**
      * Language string to use for 'Add {no} more {whatever we call answers}'.
      */
-    protected function get_more_choices_string()
-    {
+    protected function get_more_choices_string() {
         return get_string('blanksforxmorequestions', 'qtype_crossword');
     }
 
-    protected function data_preprocessing($question)
-    {
+    /**
+     * @param object $question
+     * @return object
+     */
+    protected function data_preprocessing($question) {
         $question = parent::data_preprocessing($question);
         $question = $this->data_preprocessing_combined_feedback($question, true);
         $question = $this->data_preprocessing_hints($question, true, true);
@@ -111,8 +119,13 @@ class qtype_crossword_edit_form extends question_edit_form
         return $question;
     }
 
-    public function validation($data, $files)
-    {
+    /**
+     * @param array $data
+     * @param array $files
+     * @return array
+     * @throws coding_exception
+     */
+    public function validation($data, $files) {
         $errors = parent::validation($data, $files);
         $answers = $data['subanswers'];
         $questions = $data['subquestions'];
@@ -151,8 +164,10 @@ class qtype_crossword_edit_form extends question_edit_form
         return $errors;
     }
 
-    public function qtype()
-    {
+    /**
+     * @return string
+     */
+    public function qtype() {
         return 'crossword';
     }
 }

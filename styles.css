@@ -26,37 +26,38 @@ body#page-question-type-match div[id^=fitem_id_][id*=subanswers_] {
 
 .puzzle {
     border-collapse: collapse;
-    border-color:#000000;
+    border-color: #000;
 }
 
 .letter-cell {
-    text-align:center;
-    height:40px;
-    width:40px;
+    text-align: center;
+    height: 40px;
+    width: 40px;
 }
 
 .letter-text {
-    font-family:helvetica;
-    font-weight:bold;
+    font-family: helvetica;
+    font-weight: bold;
 }
 
 .list-text {
-    font-family:helvetica;
+    font-family: helvetica;
 }
 
 .blank-cell {
-    background-color:#000000;
+    background-color: #000;
 }
 
 .clickable {
-    cursor:pointer;
+    cursor: pointer;
 }
 
 .linkable {
-    cursor:pointer;
-    color:blue;
-    text-decoration:underline;
+    cursor: pointer;
+    color: blue;
+    text-decoration: underline;
 }
+
 .background-text {
     position: absolute;
     top: 0;
@@ -116,8 +117,7 @@ body#page-question-type-match div[id^=fitem_id_][id*=subanswers_] {
     height: 12em;
     margin-top: -9em;
     margin-left: -15em;
-    border: 1px solid #CCCCCC;
-    background-color: #F3F3F3;
+    background-color: #f3f3f3;
 }
 
 .short-margin {

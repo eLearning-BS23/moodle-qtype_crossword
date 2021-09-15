@@ -1,5 +1,4 @@
 <?php
-
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -25,7 +24,7 @@
  */
 
 defined('MOODLE_INTERNAL') || die();
-
+global $CFG;
 require_once $CFG->libdir.'/questionlib.php';
 require_once $CFG->dirroot.'/question/engine/lib.php';
 
@@ -37,8 +36,12 @@ require_once $CFG->dirroot.'/question/engine/lib.php';
  */
 class qtype_crossword extends question_type
 {
-    public function get_question_options($question)
-    {
+    /**
+     * @param object $question
+     * @return bool
+     * @throws dml_exception
+     */
+    public function get_question_options($question) {
         global $DB;
         parent::get_question_options($question);
         $question->options = $DB->get_record('qtype_crossword_options',
@@ -49,14 +52,21 @@ class qtype_crossword extends question_type
         return true;
     }
 
-    public function save_defaults_for_new_questions(stdClass $fromform): void
-    {
+    /**
+     * @param stdClass $fromform
+     */
+    public function save_defaults_for_new_questions(stdClass $fromform): void {
         parent::save_defaults_for_new_questions($fromform);
         $this->set_default_value('shuffleanswers', $fromform->shuffleanswers);
     }
 
-    public function save_question_options($question)
-    {
+    /**
+     * @param object $question
+     * @return bool|stdClass
+     * @throws coding_exception
+     * @throws dml_exception
+     */
+    public function save_question_options($question) {
         global $DB;
         $context = $question->context;
         $result = new stdClass();
@@ -122,8 +132,11 @@ class qtype_crossword extends question_type
         return true;
     }
 
-    protected function initialise_question_instance(question_definition $question, $questiondata)
-    {
+    /**
+     * @param question_definition $question
+     * @param object $questiondata
+     */
+    protected function initialise_question_instance(question_definition $question, $questiondata) {
         parent::initialise_question_instance($question, $questiondata);
 
         $question->shufflestems = $questiondata->options->shuffleanswers;
@@ -148,13 +161,20 @@ class qtype_crossword extends question_type
         }
     }
 
-    protected function make_hint($hint)
-    {
+    /**
+     * @param object $hint
+     * @return question_hint|question_hint_with_parts
+     */
+    protected function make_hint($hint) {
         return question_hint_with_parts::load_from_record($hint);
     }
 
-    public function delete_question($questionid, $contextid)
-    {
+    /**
+     * @param $questionid
+     * @param int $contextid
+     * @throws dml_exception
+     */
+    public function delete_question($questionid, $contextid) {
         global $DB;
         $DB->delete_records('qtype_crossword_options', ['questionid' => $questionid]);
         $DB->delete_records('qtype_crossword_subquestions', ['questionid' => $questionid]);
@@ -162,15 +182,21 @@ class qtype_crossword extends question_type
         parent::delete_question($questionid, $contextid);
     }
 
-    public function get_random_guess_score($questiondata)
-    {
+    /**
+     * @param stdClass $questiondata
+     * @return float|int
+     */
+    public function get_random_guess_score($questiondata) {
         $q = $this->make_question($questiondata);
 
         return 1 / count($q->choices);
     }
 
-    public function get_possible_responses($questiondata)
-    {
+    /**
+     * @param $questiondata
+     * @return array
+     */
+    public function get_possible_responses($questiondata) {
         $subqs = [];
 
         $q = $this->make_question($questiondata);
@@ -190,8 +216,13 @@ class qtype_crossword extends question_type
         return $subqs;
     }
 
-    public function move_files($questionid, $oldcontextid, $newcontextid)
-    {
+    /**
+     * @param int $questionid
+     * @param int $oldcontextid
+     * @param int $newcontextid
+     * @throws dml_exception
+     */
+    public function move_files($questionid, $oldcontextid, $newcontextid) {
         global $DB;
         $fs = get_file_storage();
 
@@ -208,8 +239,12 @@ class qtype_crossword extends question_type
         $this->move_files_in_hints($questionid, $oldcontextid, $newcontextid);
     }
 
-    protected function delete_files($questionid, $contextid)
-    {
+    /**
+     * @param int $questionid
+     * @param int $contextid
+     * @throws dml_exception
+     */
+    protected function delete_files($questionid, $contextid) {
         global $DB;
         $fs = get_file_storage();
 

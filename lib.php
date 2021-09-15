@@ -40,8 +40,7 @@ defined('MOODLE_INTERNAL') || die();
  * @package  qtype_crossword
  * @category files
  */
-function qtype_crossword_pluginfile($course, $cm, $context, $filearea, $args, $forcedownload, array $options = array())
-{
+function qtype_crossword_pluginfile($course, $cm, $context, $filearea, $args, $forcedownload, array $options = array()) {
     global $DB, $CFG;
     require_once($CFG->libdir . '/questionlib.php');
     question_pluginfile($course, $context, 'qtype_crossword', $filearea, $args, $forcedownload, $options);

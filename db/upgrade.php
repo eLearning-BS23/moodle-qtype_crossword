@@ -29,8 +29,7 @@ defined('MOODLE_INTERNAL') || die();
  * Upgrade code for the crossword question type.
  * @param int $oldversion the version we are upgrading from.
  */
-function xmldb_qtype_crossword_upgrade($oldversion)
-{
+function xmldb_qtype_crossword_upgrade($oldversion) {
     global $CFG;
 
     // Automatically generated Moodle v3.6.0 release upgrade line.
