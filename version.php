@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -14,7 +15,7 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-/**
+/*
  * Version information for the crossword question type.
  *
  * @package   qtype_crossword
@@ -25,7 +26,7 @@
 defined('MOODLE_INTERNAL') || die();
 
 $plugin->component = 'qtype_crossword';
-$plugin->version = 2021081701;
+$plugin->version = 2021081702;
 $plugin->requires = 2019111803;
 $plugin->release = 'v1.0.1';
 $plugin->maturity = MATURITY_STABLE;
