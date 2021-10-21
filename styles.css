@@ -1,64 +1,38 @@
-/* Editing form. */
-body#page-question-type-match div[id^=fitem_id_][id*=subquestions_] {
-    background: #eee;
-    margin-top: 0;
-    margin-bottom: 0;
-    padding-bottom: 5px;
-    padding-top: 5px;
-    border: 1px solid #bbb;
-    border-bottom: 0;
-}
-
-body#page-question-type-match div[id^=fitem_id_][id*=subquestions_] .fitemtitle {
-    font-weight: bold;
-}
-
-body#page-question-type-match div[id^=fitem_id_][id*=subanswers_] {
-    background: #eee;
-    margin-bottom: 2em;
-    margin-top: 0;
-    padding-bottom: 5px;
-    padding-top: 5px;
-    border: 1px solid #bbb;
-    border-top: 0;
-}
-
-
-.puzzle {
+.crossword-puzzle {
     border-collapse: collapse;
     border-color: #000;
 }
 
-.letter-cell {
+.crossword-letter-cell {
     text-align: center;
     height: 40px;
     width: 40px;
 }
 
-.letter-text {
+.crossword-letter-text {
     font-family: helvetica;
     font-weight: bold;
 }
 
-.list-text {
+.crossword-list-text {
     font-family: helvetica;
 }
 
-.blank-cell {
+.crossword-blank-cell {
     background-color: #000;
 }
 
-.clickable {
+.crossword-clickable {
     cursor: pointer;
 }
 
-.linkable {
+.crossword-linkable {
     cursor: pointer;
     color: blue;
     text-decoration: underline;
 }
 
-.background-text {
+.crossword-background-text {
     position: absolute;
     top: 0;
     left: 0;
@@ -68,11 +42,11 @@ body#page-question-type-match div[id^=fitem_id_][id*=subanswers_] {
     overflow: hidden;
 }
 
-.strikeout {
+.crossword-strikeout {
     position: relative;
 }
 
-.strikeout::after {
+.crossword-strikeout::after {
     border-bottom: 0.250em solid blue;
     content: "";
     left: 0;
@@ -82,11 +56,11 @@ body#page-question-type-match div[id^=fitem_id_][id*=subanswers_] {
     top: 50%;
 }
 
-.red-strikeout {
+.crossword-red-strikeout {
     position: relative;
 }
 
-.red-strikeout::after {
+.crossword-red-strikeout::after {
     border-bottom: 0.250em solid red;
     content: "";
     left: 0;
@@ -102,7 +76,7 @@ body#page-question-type-match div[id^=fitem_id_][id*=subanswers_] {
     font-size: 0.6em;
 }
 
-.relative-position {
+.crossword-relative-position {
     position: relative;
 }
 
@@ -120,10 +94,4 @@ body#page-question-type-match div[id^=fitem_id_][id*=subanswers_] {
     background-color: #f3f3f3;
 }
 
-.short-margin {
-    margin: 20px;
-}
 
-.hidden {
-    display: none;
-}

@@ -18,7 +18,7 @@
  * CROSSWORD plugin question specification.
  *
  * @package    qtype_crossword
- * @copyright  2021 Brain station 23 ltd.
+ * @copyright  2020 Brain station 23 ltd <>  {@link https://brainstation-23.com/}
  * @author     Brain station 23 ltd.
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -31,8 +31,9 @@ require_once $CFG->dirroot.'/question/engine/lib.php';
 /**
  * The matching question type class.
  *
- * @copyright  2021 Brain station 23 ltd.
+ * @copyright  2020 Brain station 23 ltd <>  {@link https://brainstation-23.com/}
  * @author     Brain station 23 ltd.
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class qtype_crossword extends question_type
 {

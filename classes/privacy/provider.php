@@ -18,7 +18,7 @@
  * Privacy Subsystem implementation for qtype_crossword.
  *
  * @package    qtype_crossword
- * @copyright  2021 Brain station 23 ltd.
+ * @copyright  2020 Brain station 23 ltd <>  {@link https://brainstation-23.com/}
  * @author     Brain station 23 ltd.
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -35,7 +35,7 @@ defined('MOODLE_INTERNAL') || die();
  * Privacy Subsystem for qtype_crossword implementing user_preference_provider.
  *
  * @package    qtype_crossword
- * @copyright  2021 Brain station 23 ltd.
+ * @copyright  2020 Brain station 23 ltd <>  {@link https://brainstation-23.com/}
  * @author     Brain station 23 ltd.
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */

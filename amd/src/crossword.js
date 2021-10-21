@@ -208,7 +208,7 @@ define(['jquery'], function($) {
                             }
                         }
 
-                        $('#' + word + '-listing').addClass('red-strikeout');
+                        $('#' + word + '-listing').addClass('crossword-red-strikeout');
                         $('#' + word + '-listing').attr('data-solved', true);
 
                         $('#answer-form').hide();
@@ -287,7 +287,7 @@ define(['jquery'], function($) {
                         if (blockingitemnumber) {
                             fillnumber = blockingitemnumber;
                         }
-                        var element = '<div class="background-text"><span class="crossword-grid-cell-number">'
+                        var element = '<div class="crossword-background-text"><span class="crossword-grid-cell-number">'
                             + fillnumber + '</span></div>';
                         var parentelement;
                         parentelement = $('#cell-position-' + coordinates[0] + '-' + coordinates[1]);
@@ -353,16 +353,16 @@ define(['jquery'], function($) {
                 function showCrossWordPuzzle(matrix) {
                     var widestline = getWidestLine(matrix);
                     var tallestline = getTallestLine(matrix);
-                    var table = $('<table class="puzzle" border="1" cellpadding="0" cellspacing="0"></table>');
+                    var table = $('<table class="crossword-puzzle" border="1" cellpadding="0" cellspacing="0"></table>');
                     for (var i = 0; i < tallestline; i++) {
                         var tablerow = '<tr class="letter-row">';
                         for (var j = 0; j < widestline; j++) {
-                            var cellclass = 'letter-cell';
+                            var cellclass = 'crossword-letter-cell';
                             if (!matrix[i][j] || matrix[i][j] == ' ') {
-                                cellclass += ' blank-cell';
+                                cellclass += ' crossword-blank-cell';
                             }
-                            tablerow += '<td id="cell-position-' + i + '-' + j + '" class="relative-position ' + cellclass + '">';
-                            tablerow += '<span class="letter-text" id="letter-position-' + i + '-' + j + '">';
+                            tablerow += '<td id="cell-position-' + i + '-' + j + '" class="crossword-relative-position ' + cellclass + '">';
+                            tablerow += '<span class="crossword-letter-text" id="letter-position-' + i + '-' + j + '">';
                             if (areWeInGodMode() && matrix[i][j] && matrix[i][j] != ' ') {
                                 tablerow += matrix[i][j];
                             }
@@ -1567,9 +1567,6 @@ define(['jquery'], function($) {
                                 $('#' + letterposition).text(answer[i]);
                             }
                         }
-
-                        // $('#' + word + '-listing').addClass('strikeout');
-                        // $('#' + word + '-listing').attr('data-solved', true);
 
                         $('#answer-form').hide();
                     } else {

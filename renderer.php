@@ -18,7 +18,7 @@
  * CROSSWORD plugin version specification.
  *
  * @package    qtype_crossword
- * @copyright  2021 Brain station 23 ltd.
+ * @copyright  2020 Brain station 23 ltd <>  {@link https://brainstation-23.com/}
  * @author     Brain station 23 ltd.
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -28,9 +28,9 @@ defined('MOODLE_INTERNAL') || die();
 /**
  * Generates the output for crossword questions.
  *
- * @copyright 2021 Brain Station 23 ltd.
+ * @copyright  2020 Brain station 23 ltd <>  {@link https://brainstation-23.com/}
  * @author     Brain station 23 ltd.
- * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class qtype_crossword_renderer extends qtype_with_combined_feedback_renderer
 {
@@ -57,10 +57,6 @@ class qtype_crossword_renderer extends qtype_with_combined_feedback_renderer
             array_push($arr, [$ans, $ques, $filename]);
         }
         $result = '';
-        $result .= '
-                    <link rel="stylesheet" href="'.$CFG->dirroot.'/question/type/crossword/styles.css">
-                    ';
-
         $this->page->requires->js_call_amd('qtype_crossword/crossword', 'setup', [json_encode($arr)]);
 
         $result .= '<div id="root" class="root">
@@ -71,11 +67,11 @@ class qtype_crossword_renderer extends qtype_with_combined_feedback_renderer
                         <table>
 
                             <tr>
-                                <td width="50%" id="left-list" valign="top" class="list-text">
+                                <td width="50%" id="left-list" valign="top" class="crossword-list-text">
                                     <center>
                                     </center>
                                 </td>
-                                <td width="50%" id="right-list" valign="top" class="list-text">
+                                <td width="50%" id="right-list" valign="top" class="crossword-list-text">
                                     <center>
                                     </center>
                                 </td>

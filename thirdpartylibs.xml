@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<libraries>
+    <library>
+        <location>amd/src/crossword.js</location>
+        <name>crossword</name>
+        <version>1.0.0</version>
+        <license>BSD 3-Clause</license>
+        <licenseversion>2.0</licenseversion>
+    </library>
+
+</libraries>
