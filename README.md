@@ -12,12 +12,15 @@ You can install this plugin from [Moodle plugins directory](https://moodle.org/p
 
 > After installing the plugin, create quiz and add a question type crossword
 
+![Screenshot-from-20220712-115728480x550](https://user-images.githubusercontent.com/40598386/178419167-a616168e-e018-4dc4-941d-d24aae9a7e51.png)
 
+> Add the questions and the correct answers
 <p align="center">
 <img src="https://i.imgur.com/kqh1kMG.png">
 </p>
 
-
+## Author
+- [Brain Station 23 Ltd.](https://brainstation-23.com)
 
 ## License
 
